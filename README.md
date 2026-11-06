@@ -15,7 +15,7 @@ HALL → HAIL → MAIL → MAIN → ZAIN      (par 4)
 | One change per step | Exactly one letter changes. No adding, removing or rearranging. |
 | Real words only | Every step must be in the dictionary (3,189 four-letter words). |
 | Par | The true shortest route to ZAIN, computed over the *whole* dictionary, so nobody can beat it. |
-| Daily word | A new puzzle at the player's local midnight. Puzzle #1 is 6 Nov 2026. |
+| Daily word | A new puzzle at the player's local midnight. Puzzle #1 (PINS) was 5 Nov 2026. |
 | Difficulty curve | Monday is par 3, then it climbs to par 6 at the weekend. |
 | Wordle-style play | Type the next word into the empty row and press Enter. Letters already in ZAIN's position turn green. |
 | Stuck? | "Show the answer" (in stats) reveals the shortest route but counts as a loss. |

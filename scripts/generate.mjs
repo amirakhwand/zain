@@ -18,7 +18,9 @@ const wordlist = require("wordlist-english");
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 const TARGET = "zain";
-const LAUNCH_DATE = "2026-11-06"; // Puzzle #1 (local date of the player)
+const LAUNCH_DATE = "2026-11-05"; // Puzzle #1 (local date of the player)
+// Puzzles already played before the schedule was regenerated stay fixed.
+const PINNED = ["pins"];          // #1 = 5 Nov 2026
 const DAYS = 365 * 4;             // How many daily puzzles to schedule
 const SEED = 20261106;            // Change to reshuffle the schedule
 
@@ -118,10 +120,11 @@ function take(par) {
 const launch = new Date(LAUNCH_DATE + "T00:00:00Z");
 const pathOf = (w) => { const p = [w]; while (p.at(-1) !== TARGET) p.push(easy.next.get(p.at(-1))); return p; };
 const puzzles = [];
+for (const w of PINNED) used.add(w);
 for (let i = 0; i < DAYS; i++) {
   const date = new Date(launch.getTime() + i * 86400000);
   const weekday = (date.getUTCDay() + 6) % 7;
-  const start = take(parByWeekday[weekday]);
+  const start = i < PINNED.length ? PINNED[i] : take(parByWeekday[weekday]);
   puzzles.push({ n: i + 1, date: date.toISOString().slice(0, 10), start, par: easy.dist.get(start), solution: pathOf(start) });
 }
 
