@@ -152,9 +152,11 @@
     if (typed.length < 4) { shake(); return toast("Not enough letters"); }
     const word = typed;
     const d = diffCount(word, current());
-    if (d === 0) { shake(); return toast("Change one letter"); }
-    if (d > 1) { shake(); return toast("Only change one letter"); }
+    // 1) Is it a real word at all?
     if (!VALID.has(word)) { shake(); return toast("Not in word list"); }
+    // 2) It's a real word, but the move breaks the rules.
+    if (d === 0) { shake(); return toast(`You're already on ${up(word)}. Change one letter`); }
+    if (d > 1) { shake(); return toast(`${up(word)} changes ${d} letters. Only change one`); }
     game.ladder.push(word);
     typed = "";
     animateLast = true;
