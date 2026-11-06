@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Zainle: the daily word ladder</title>
+  <meta name="description" content="Change one letter at a time until you reach ZAIN. A new word every day.">
+  <meta name="theme-color" content="#2a1a4a">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23f2b134'/><text x='50' y='72' font-size='64' font-family='Arial Black,Arial' font-weight='900' text-anchor='middle' fill='%232a1a4a'>Z</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="bar">
+    <button class="icon-btn" id="btn-help" aria-label="How to play">?</button>
+    <h1 class="logo">ZAIN<span>LE</span></h1>
+    <div class="bar-right">
+      <button class="icon-btn" id="btn-stats" aria-label="Statistics">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M4 20V10h3v10H4zm6 0V4h3v16h-3zm6 0v-7h3v7h-3z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <nav class="modes" role="tablist">
+    <button role="tab" class="mode active" data-mode="daily" aria-selected="true">Daily</button>
+    <button role="tab" class="mode" data-mode="unlimited" aria-selected="false">Unlimited</button>
+  </nav>
+
+  <main class="game">
+    <div class="meta">
+      <span id="puzzle-label">Puzzle #1</span>
+      <span class="meta-steps">Steps <b id="steps">0</b> · Par <b id="par">0</b></span>
+    </div>
+
+    <div class="ladder" id="ladder" aria-live="polite"></div>
+
+    <div class="actions">
+      <button class="pill" id="btn-undo">↶ Undo</button>
+      <button class="pill" id="btn-hint">💡 Hint</button>
+      <button class="pill" id="btn-giveup">Show answer</button>
+      <button class="pill primary hidden" id="btn-new">New word →</button>
+    </div>
+  </main>
+
+  <div class="keyboard" id="keyboard" aria-label="Keyboard"></div>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <!-- How to play -->
+  <dialog class="modal" id="dlg-help">
+    <button class="close" data-close aria-label="Close">×</button>
+    <h2>How to play</h2>
+    <p>Get from today's word to <b class="z">ZAIN</b> in as few steps as you can.</p>
+    <ul>
+      <li>Change <b>exactly one letter</b> each step.</li>
+      <li>Every step must be a <b>real 4-letter word</b>.</li>
+      <li>You can't add, remove or rearrange letters.</li>
+      <li><b>Par</b> is the fewest steps possible. Can you match it?</li>
+    </ul>
+    <div class="example">
+      <div class="mini"><span>H</span><span>A</span><span>L</span><span>L</span></div>
+      <div class="mini"><span>H</span><span>A</span><span class="chg">I</span><span>L</span></div>
+      <div class="mini"><span class="chg">M</span><span>A</span><span>I</span><span>L</span></div>
+      <div class="mini"><span>M</span><span>A</span><span>I</span><span class="chg">N</span></div>
+      <div class="mini win"><span class="chg">Z</span><span>A</span><span>I</span><span>N</span></div>
+    </div>
+    <p class="small">Tap a letter to choose it, then type its replacement and press <b>Enter</b>. You can also type the whole new word.</p>
+    <p class="small">A new word comes out every day at midnight. Want more? Try <b>Unlimited</b>.</p>
+    <button class="pill primary wide" data-close>Let's play</button>
+  </dialog>
+
+  <!-- Stats / result -->
+  <dialog class="modal" id="dlg-stats">
+    <button class="close" data-close aria-label="Close">×</button>
+    <div id="result" class="result hidden">
+      <h2 id="result-title">You reached ZAIN!</h2>
+      <p id="result-sub"></p>
+      <div class="result-path" id="result-path"></div>
+      <button class="pill primary wide" id="btn-share">Share result</button>
+    </div>
+    <h2>Statistics</h2>
+    <div class="stats">
+      <div><b id="st-played">0</b><span>Played</span></div>
+      <div><b id="st-solved">0</b><span>Solved %</span></div>
+      <div><b id="st-par">0</b><span>At par</span></div>
+      <div><b id="st-streak">0</b><span>Streak</span></div>
+      <div><b id="st-max">0</b><span>Best streak</span></div>
+    </div>
+    <h3>Steps over par</h3>
+    <div class="dist" id="dist"></div>
+    <p class="countdown" id="countdown-wrap">Next word in <b id="countdown">--:--:--</b></p>
+  </dialog>
+
+  <script src="words.js"></script>
+  <script src="puzzles.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
