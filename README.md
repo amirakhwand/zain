@@ -71,11 +71,11 @@ It's a static site with no build step and no backend.
 npm start         # http://localhost:8080
 ```
 
-To deploy, upload the `public/` folder to any static host (GitHub Pages,
-Netlify, Vercel, Cloudflare Pages).
+### Hosting
 
-### GitHub Pages
+Live at **https://zainle.amirakhwand.workers.dev** on Cloudflare Workers.
+`wrangler.jsonc` tells Cloudflare to serve the `public/` folder, and every
+push to `main` redeploys it automatically.
 
-`.github/workflows/pages.yml` publishes `public/` on every push to `main`
-(it runs `npm test` first). One-time setup in the repo's **Settings → Pages**:
-set **Source** to **GitHub Actions**.
+The old GitHub Pages address (amirakhwand.github.io/zain) now just redirects
+to the new link (`redirect/` and `.github/workflows/pages.yml`).

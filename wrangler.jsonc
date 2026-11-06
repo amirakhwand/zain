@@ -1,0 +1,10 @@
+// Cloudflare Workers config: serves the static game in public/
+// Live at https://zainle.amirakhwand.workers.dev
+{
+  "name": "zainle",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./public",
+    "not_found_handling": "single-page-application"
+  }
+}
