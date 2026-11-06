@@ -253,6 +253,7 @@
         game.ladder.map(up).join(" → ") +
         (game.gaveUp || over > 0 ? `<div class="opt">Shortest: ${best.map(up).join(" → ")}</div>` : "");
       $("btn-new").classList.toggle("hidden", mode !== "practice");
+      $("zain-gif").classList.toggle("hidden", game.gaveUp);
     }
     $("countdown-wrap").classList.toggle("hidden", mode !== "daily");
     $("giveup-wrap").classList.toggle("hidden", game.done);
@@ -453,6 +454,8 @@
   document.addEventListener("visibilitychange", () => { if (!document.hidden) tickCountdown(); });
   window.addEventListener("focus", tickCountdown);
   window.addEventListener("pageshow", tickCountdown);
+  // Fetch the win GIF in the background so it's ready the moment someone wins.
+  setTimeout(() => { new Image().src = $("zain-gif").getAttribute("src"); }, 2500);
   updateBirthday();
   if (isBirthday()) setTimeout(() => confetti(220), 400);
   if (!store.get("zainle-seen-help", false)) { $("dlg-help").showModal(); store.set("zainle-seen-help", true); }

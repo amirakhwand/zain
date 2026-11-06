@@ -266,6 +266,15 @@ a { color: inherit; }
 .path .opt { color: var(--muted); font-weight: 500; font-size: 14px; margin-top: 6px; }
 .result { text-align: center; padding-bottom: 18px; margin-bottom: 18px; border-bottom: 1px solid var(--line); }
 .result p { margin: 0 0 10px; color: var(--muted); }
+.zain-gif {
+  display: block;
+  margin: 4px auto 12px;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: min(240px, 32svh);
+  border-radius: 10px;
+}
 .result-btns { display: flex; gap: 10px; justify-content: center; margin-top: 16px; }
 .btn {
   border: 0;
