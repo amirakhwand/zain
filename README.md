@@ -17,18 +17,21 @@ HALL → HAIL → MAIL → MAIN → ZAIN      (par 4)
 | Par | The true shortest route to ZAIN, computed over the *whole* dictionary, so nobody can beat it. |
 | Daily word | A new puzzle at the player's local midnight. Puzzle #1 is 6 Nov 2026. |
 | Difficulty curve | Monday is par 3, then it climbs to par 6 at the weekend. |
-| Hints | 3 per puzzle. Each one fills in the next word on a shortest route. |
-| Undo / Show answer | Undo steps freely. Showing the answer counts as a loss. |
-| Unlimited | Endless random puzzles from the same pool. |
+| Wordle-style play | Type the next word into the empty row and press Enter. Letters already in ZAIN's position turn green. |
+| Stuck? | "Show the answer" (in stats) reveals the shortest route but counts as a loss. |
+| Yesterday's answer | Shows the previous day's shortest route. |
+| Practice | Endless random puzzles from the same pool. |
 | Stats | Played, solved %, at-par count, streaks, steps-over-par chart (stored in the browser). |
-| Share | Spoiler-free emoji grid: 🟪 marks which letter changed, 🟩🟩🟩🟩 is ZAIN. |
+| Share | Spoiler-free emoji grid: 🟩 = letter in ZAIN's spot, ⬛ = not yet. |
 
 ### Example share
 ```
 Zainle #4 3/3 ⭐
-BAIL
-🟪⬜⬜⬜
-⬜⬜⬜🟪
+BAIL → ZAIN
+
+⬛🟩🟩⬛
+⬛🟩🟩⬛
+⬛🟩🟩🟩
 🟩🟩🟩🟩
 ```
 
