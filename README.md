@@ -70,3 +70,9 @@ npm start         # http://localhost:8080
 
 To deploy, upload the `public/` folder to any static host (GitHub Pages,
 Netlify, Vercel, Cloudflare Pages).
+
+### GitHub Pages
+
+`.github/workflows/pages.yml` publishes `public/` on every push to `main`
+(it runs `npm test` first). One-time setup in the repo's **Settings → Pages**:
+set **Source** to **GitHub Actions**.
