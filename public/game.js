@@ -166,6 +166,7 @@
         const r = $("board").lastElementChild;
         if (r) r.classList.add("win");
         toast(steps() <= game.par ? "Par! Perfect 🎉" : `Made it in ${steps()}!`, 2000);
+        if (isBirthday()) confetti();
       }, 650);
       setTimeout(openStats, 2200);
     }
@@ -284,12 +285,61 @@
     toast("A new word is here!", 2200);
   }
 
+  // ---------- Birthday ----------
+  // Shown only on this date (player's local calendar); it disappears on its own at midnight.
+  const BIRTHDAY = "2026-11-06";
+  const localDate = (d = new Date()) =>
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  const isBirthday = () => localDate() === BIRTHDAY;
+  function updateBirthday() {
+    $("bday").classList.toggle("hidden", !isBirthday());
+  }
+
+  let confettiRunning = false;
+  function confetti(count = 180) {
+    if (confettiRunning || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const cv = $("confetti");
+    const ctx = cv.getContext("2d");
+    const dpr = window.devicePixelRatio || 1;
+    cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
+    ctx.scale(dpr, dpr);
+    const colors = ["#e2558b", "#f2a93b", "#3f9f62", "#4a8fe0", "#9b5de5", "#ffd23f"];
+    const parts = Array.from({ length: count }, () => ({
+      x: innerWidth / 2 + (Math.random() - 0.5) * innerWidth * 0.3,
+      y: innerHeight * 0.35,
+      vx: (Math.random() - 0.5) * 14,
+      vy: -Math.random() * 14 - 4,
+      w: 6 + Math.random() * 6, h: 8 + Math.random() * 8,
+      r: Math.random() * Math.PI, vr: (Math.random() - 0.5) * 0.3,
+      c: colors[Math.floor(Math.random() * colors.length)],
+    }));
+    const start = performance.now();
+    confettiRunning = true;
+    (function frame(t) {
+      const elapsed = t - start;
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      for (const p of parts) {
+        p.vy += 0.35; p.vx *= 0.99; p.vy *= 0.99;
+        p.x += p.vx; p.y += p.vy; p.r += p.vr;
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, 1 - elapsed / 4000);
+        ctx.translate(p.x, p.y); ctx.rotate(p.r);
+        ctx.fillStyle = p.c;
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h * Math.abs(Math.cos(p.r * 2)));
+        ctx.restore();
+      }
+      if (elapsed < 4000) requestAnimationFrame(frame);
+      else { ctx.clearRect(0, 0, innerWidth, innerHeight); confettiRunning = false; }
+    })(start);
+  }
+
   function tickCountdown() {
     const now = new Date();
     const s = Math.max(0, Math.ceil((nextMidnight(now) - now) / 1000));
     const pad = (x) => String(x).padStart(2, "0");
     $("countdown").textContent = `${pad(Math.floor(s / 3600))}:${pad(Math.floor((s % 3600) / 60))}:${pad(s % 60)}`;
     checkNewDay();
+    updateBirthday();
   }
 
   // A timer aimed exactly at midnight (re-armed each day), so the switch
@@ -393,6 +443,7 @@
   darkQuery.addEventListener("change", syncThemeColor);
   syncThemeColor();
 
+  $("bday").addEventListener("click", () => confetti());
   buildKeyboard();
   setMode("daily");
   setInterval(tickCountdown, 1000);
@@ -402,6 +453,8 @@
   document.addEventListener("visibilitychange", () => { if (!document.hidden) tickCountdown(); });
   window.addEventListener("focus", tickCountdown);
   window.addEventListener("pageshow", tickCountdown);
+  updateBirthday();
+  if (isBirthday()) setTimeout(() => confetti(220), 400);
   if (!store.get("zainle-seen-help", false)) { $("dlg-help").showModal(); store.set("zainle-seen-help", true); }
 
   window.__zainle = { shortestPath, dailyPuzzle, get game() { return game; } };
