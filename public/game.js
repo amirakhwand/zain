@@ -292,7 +292,11 @@
         if (k === "⌫") b.innerHTML = `<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-3 12.59L17.59 17 14 13.41 10.41 17 9 15.59 12.59 12 9 8.41 10.41 7 14 10.59 17.59 7 19 8.41 15.41 12 19 15.59z"/></svg>`;
         else b.textContent = k === "↵" ? "Enter" : k;
         b.setAttribute("aria-label", k === "↵" ? "Enter" : k === "⌫" ? "Backspace" : k);
-        b.addEventListener("click", (e) => { e.currentTarget.blur(); k === "↵" ? submit() : k === "⌫" ? backspace() : typeLetter(k); });
+        const press = () => (k === "↵" ? submit() : k === "⌫" ? backspace() : typeLetter(k));
+        // On touch screens act on touchend and cancel the browser's default,
+        // so fast repeated taps never trigger iOS double-tap zoom.
+        b.addEventListener("touchend", (e) => { e.preventDefault(); press(); }, { passive: false });
+        b.addEventListener("click", (e) => { e.currentTarget.blur(); press(); });
         rowEl.appendChild(b);
       }
       kb.appendChild(rowEl);
@@ -311,6 +315,18 @@
   }
 
   const on = (id, fn) => $(id).addEventListener("click", (e) => { e.preventDefault(); fn(); });
+
+  // Page-wide guard: a second tap within 350ms is a double-tap; cancel it so
+  // iOS Safari can't zoom (taps on buttons/links still fire their clicks).
+  let lastTouchEnd = 0;
+  document.addEventListener("touchend", (e) => {
+    const now = Date.now();
+    if (now - lastTouchEnd < 350 && !e.target.closest("a, button, dialog")) e.preventDefault();
+    lastTouchEnd = now;
+  }, { passive: false });
+  // Block pinch/double-tap "gesture" zoom events on older iOS.
+  document.addEventListener("gesturestart", (e) => e.preventDefault());
+  document.addEventListener("dblclick", (e) => e.preventDefault());
   document.addEventListener("keydown", (e) => {
     if (e.ctrlKey || e.metaKey || e.altKey || modalOpen()) return;
     if (e.key === "Enter") { e.preventDefault(); submit(); }
