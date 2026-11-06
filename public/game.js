@@ -328,6 +328,19 @@
   on("btn-share", share);
   on("btn-new", () => { game = newPractice(); save(); typed = ""; $("dlg-stats").close(); render(); });
 
+  // ---------- Light / dark mode ----------
+  const darkQuery = matchMedia("(prefers-color-scheme: dark)");
+  const isDark = () => (document.documentElement.dataset.theme || (darkQuery.matches ? "dark" : "light")) === "dark";
+  const syncThemeColor = () => document.querySelector('meta[name="theme-color"]').setAttribute("content", isDark() ? "#1e1d24" : "#ffffff");
+  on("btn-theme", () => {
+    const next = isDark() ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    store.set("zainle-theme", next);
+    syncThemeColor();
+  });
+  darkQuery.addEventListener("change", syncThemeColor);
+  syncThemeColor();
+
   buildKeyboard();
   setMode("daily");
   setInterval(tickCountdown, 1000);
