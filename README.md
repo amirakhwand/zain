@@ -79,6 +79,8 @@ push to `main` redeploys it automatically.
 
 Cloudflare build settings (Worker → Settings → Builds): production branch
 `main`, build command empty, deploy command `npx wrangler deploy`.
+To check which version is live, open **About** in the game. When you ship
+changes, bump `?v=` in `public/index.html` so phones fetch the new files.
 
 The old GitHub Pages address (amirakhwand.github.io/zain) now just redirects
 to the new link (`redirect/` and `.github/workflows/pages.yml`).
