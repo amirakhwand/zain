@@ -271,13 +271,32 @@
     $("dlg-yesterday").showModal();
   }
 
+  const nextMidnight = (now = new Date()) => new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+
+  // Switch to the new daily word the moment the date changes (12:00 AM local).
+  function checkNewDay() {
+    if (mode !== "daily" || game.n === dailyPuzzle().n) return;
+    game = newDaily();
+    typed = "";
+    const stats = $("dlg-stats");
+    if (stats.open) stats.close();
+    render();
+    toast("A new word is here!", 2200);
+  }
+
   function tickCountdown() {
     const now = new Date();
-    const next = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-    const s = Math.max(0, Math.floor((next - now) / 1000));
+    const s = Math.max(0, Math.ceil((nextMidnight(now) - now) / 1000));
     const pad = (x) => String(x).padStart(2, "0");
     $("countdown").textContent = `${pad(Math.floor(s / 3600))}:${pad(Math.floor((s % 3600) / 60))}:${pad(s % 60)}`;
-    if (mode === "daily" && dailyPuzzle().n !== game.n) { game = newDaily(); typed = ""; render(); }
+    checkNewDay();
+  }
+
+  // A timer aimed exactly at midnight (re-armed each day), so the switch
+  // doesn't wait for the next once-a-second tick.
+  function armMidnightTimer() {
+    const ms = nextMidnight() - new Date() + 50;
+    setTimeout(() => { tickCountdown(); armMidnightTimer(); }, Math.min(ms, 2147483647));
   }
 
   // ---------- Setup ----------
@@ -378,6 +397,11 @@
   setMode("daily");
   setInterval(tickCountdown, 1000);
   tickCountdown();
+  armMidnightTimer();
+  // Phones pause background tabs, so re-check whenever the game comes back.
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) tickCountdown(); });
+  window.addEventListener("focus", tickCountdown);
+  window.addEventListener("pageshow", tickCountdown);
   if (!store.get("zainle-seen-help", false)) { $("dlg-help").showModal(); store.set("zainle-seen-help", true); }
 
   window.__zainle = { shortestPath, dailyPuzzle, get game() { return game; } };
