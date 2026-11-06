@@ -58,7 +58,10 @@ body {
   height: 100dvh;
   overflow: hidden;
   -webkit-tap-highlight-color: transparent;
+  /* Stop double-tap zoom (e.g. tapping Backspace quickly on iPhone). */
+  touch-action: manipulation;
 }
+button, a { touch-action: manipulation; }
 button { font: inherit; color: inherit; cursor: pointer; }
 a { color: inherit; }
 .hidden { display: none !important; }
@@ -162,6 +165,8 @@ a { color: inherit; }
   font-size: 18px;
   text-transform: uppercase;
   padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
 }
 .key.wide { max-width: 66px; flex: 1.5; font-size: 14px; text-transform: none; }
 .key:active { filter: brightness(1.2); }
