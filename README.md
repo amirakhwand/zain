@@ -77,5 +77,8 @@ Live at **https://zainle.amirakhwand.workers.dev** on Cloudflare Workers.
 `wrangler.jsonc` tells Cloudflare to serve the `public/` folder, and every
 push to `main` redeploys it automatically.
 
+Cloudflare build settings (Worker → Settings → Builds): production branch
+`main`, build command empty, deploy command `npx wrangler deploy`.
+
 The old GitHub Pages address (amirakhwand.github.io/zain) now just redirects
 to the new link (`redirect/` and `.github/workflows/pages.yml`).
