@@ -213,7 +213,7 @@
     const score = game.gaveUp ? "X" : `${steps()}/${game.par}`;
     const star = !game.gaveUp && steps() <= game.par ? " ⭐" : "";
     const grid = game.ladder.map((w) => [...w].map((c, i) => (c === TARGET[i] ? "🟩" : "⬛")).join(""));
-    return [`${head} ${score}${star}`, `${up(game.start)} → ZAIN`, "", ...grid, "", location.origin + location.pathname].join("\n");
+    return [`${head} ${score}${star}`, `${up(game.start)} → ZAIN`, "", ...grid, "", location.origin + "/"].join("\n");
   }
   async function share() {
     const text = shareText();
