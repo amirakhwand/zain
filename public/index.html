@@ -11,7 +11,7 @@
     try { const t = localStorage.getItem("zainle-theme"); if (t) document.documentElement.dataset.theme = JSON.parse(t); } catch {}
   </script>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%233f9f62'/><text x='50' y='72' font-size='64' font-family='Arial Black,Arial' font-weight='900' text-anchor='middle' fill='white'>Z</text></svg>">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=2026.11.06-7">
 </head>
 <body>
   <header class="bar">
@@ -68,6 +68,7 @@
     <h2>About Zainle</h2>
     <p>A daily word ladder where every road leads to <b class="z">ZAIN</b>.</p>
     <p class="small">Everyone gets the same start word each day. Your stats are saved only in this browser.</p>
+    <p class="small">Version 2026.11.06-7</p>
   </dialog>
 
   <!-- Yesterday -->
@@ -102,8 +103,8 @@
     <p class="giveup" id="giveup-wrap"><a href="#" id="link-giveup">Stuck? Show the answer</a></p>
   </dialog>
 
-  <script src="words.js"></script>
-  <script src="puzzles.js"></script>
-  <script src="game.js"></script>
+  <script src="words.js?v=2026.11.06-7"></script>
+  <script src="puzzles.js?v=2026.11.06-7"></script>
+  <script src="game.js?v=2026.11.06-7"></script>
 </body>
 </html>

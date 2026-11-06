@@ -292,15 +292,32 @@
         if (k === "⌫") b.innerHTML = `<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-3 12.59L17.59 17 14 13.41 10.41 17 9 15.59 12.59 12 9 8.41 10.41 7 14 10.59 17.59 7 19 8.41 15.41 12 19 15.59z"/></svg>`;
         else b.textContent = k === "↵" ? "Enter" : k;
         b.setAttribute("aria-label", k === "↵" ? "Enter" : k === "⌫" ? "Backspace" : k);
-        const press = () => (k === "↵" ? submit() : k === "⌫" ? backspace() : typeLetter(k));
-        // On touch screens act on touchend and cancel the browser's default,
-        // so fast repeated taps never trigger iOS double-tap zoom.
-        b.addEventListener("touchend", (e) => { e.preventDefault(); press(); }, { passive: false });
-        b.addEventListener("click", (e) => { e.currentTarget.blur(); press(); });
+        b.dataset.key = k;
+        // Mouse / desktop only. Touch is handled on the keyboard container below.
+        b.addEventListener("click", (e) => { e.currentTarget.blur(); pressKey(k); });
         rowEl.appendChild(b);
       }
       kb.appendChild(rowEl);
     });
+
+    // Touch: act the instant a finger lands and cancel the browser's default
+    // for every touch on the keyboard. With touchstart cancelled, iOS can't
+    // treat fast repeated taps (e.g. on Backspace) as a double-tap zoom.
+    kb.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      const key = e.target.closest(".key");
+      if (!key) return;
+      key.classList.add("pressed");
+      setTimeout(() => key.classList.remove("pressed"), 120);
+      pressKey(key.dataset.key);
+    }, { passive: false });
+    kb.addEventListener("touchmove", (e) => e.preventDefault(), { passive: false });
+    kb.addEventListener("touchend", (e) => e.preventDefault(), { passive: false });
+  }
+  function pressKey(k) {
+    if (k === "↵") submit();
+    else if (k === "⌫") backspace();
+    else typeLetter(k);
   }
 
   function setMode(m) {

@@ -174,7 +174,8 @@ a { color: inherit; }
   -webkit-user-select: none;
 }
 .key.wide { max-width: 66px; flex: 1.5; font-size: 14px; text-transform: none; }
-.key:active { filter: brightness(1.2); }
+.key:active, .key.pressed { filter: brightness(1.2); }
+.keyboard { touch-action: none; }
 
 /* Footer links */
 .foot {
