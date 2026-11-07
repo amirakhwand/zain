@@ -218,7 +218,10 @@
     const grid = game.ladder.map((w) => [...w].map((c, i) => (c === TARGET[i] ? "🟩" : "⬛")).join(""));
     return [`${head} ${score}${star}`, `${up(game.start)} → ZAIN`, "", ...grid, "", location.origin + "/"].join("\n");
   }
+  // Only a solved puzzle can be shared (not in progress, not after "Show the answer").
+  const canShare = () => game.done && !game.gaveUp && current() === TARGET;
   async function share() {
+    if (!canShare()) return toast("Finish the Zainle to share your result");
     const text = shareText();
     try {
       if (navigator.share && matchMedia("(pointer: coarse)").matches) await navigator.share({ text });
@@ -256,6 +259,7 @@
         (game.gaveUp || over > 0 ? `<div class="opt">Shortest: ${best.map(up).join(" → ")}</div>` : "");
       $("btn-new").classList.toggle("hidden", mode !== "practice");
       $("zain-gif").classList.toggle("hidden", game.gaveUp);
+      $("btn-share").classList.toggle("hidden", !canShare());
     }
     $("countdown-wrap").classList.toggle("hidden", mode !== "daily");
     $("giveup-wrap").classList.toggle("hidden", game.done);
