@@ -15,6 +15,28 @@
     get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
     set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
   };
+  // ---------- Anonymous visit counting ----------
+  // Sends tiny pings (a random per-browser id, the local date and what
+  // happened) to /api/event. No names, IPs or cookies. Off on localhost.
+  const TRACK = location.protocol.startsWith("http") && !/^(localhost|127\.|\[::1\])/.test(location.hostname);
+  function visitorId() {
+    try {
+      let id = localStorage.getItem("zainle-vid");
+      if (!id) { id = (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2)); localStorage.setItem("zainle-vid", id); }
+      return id;
+    } catch { return "anon-" + Math.random().toString(36).slice(2, 12); }
+  }
+  function track(kind) {
+    if (!TRACK) return;
+    const d = new Date();
+    const day = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    const body = JSON.stringify({ vid: visitorId(), day, kind });
+    try {
+      if (!(navigator.sendBeacon && navigator.sendBeacon("/api/event", body)))
+        fetch("/api/event", { method: "POST", body, keepalive: true }).catch(() => {});
+    } catch {}
+  }
+
   const diffCount = (a, b) => { let n = 0; for (let i = 0; i < 4; i++) if (a[i] !== b[i]) n++; return n; };
   const up = (w) => w.toUpperCase();
 
@@ -158,6 +180,7 @@
     if (d === 0) { shake(); return toast(`You're already on ${up(word)}. Change one letter`); }
     if (d > 1) { shake(); return toast(`${up(word)} changes ${d} letters. Only change one`); }
     game.ladder.push(word);
+    if (mode === "daily" && game.ladder.length === 2) track("start");
     typed = "";
     animateLast = true;
     if (word === TARGET) finish(false);
@@ -189,6 +212,7 @@
     game.done = true;
     game.gaveUp = gaveUp;
     if (mode !== "daily") return;
+    track(gaveUp ? "giveup" : "win");
     const s = loadStats();
     if (s.lastPlayed === game.n) return;
     s.played++;
@@ -460,6 +484,7 @@
   document.addEventListener("visibilitychange", () => { if (!document.hidden) tickCountdown(); });
   window.addEventListener("focus", tickCountdown);
   window.addEventListener("pageshow", tickCountdown);
+  track("visit");
   // Fetch the win GIF in the background so it's ready the moment someone wins.
   setTimeout(() => { new Image().src = $("zain-gif").getAttribute("src"); }, 2500);
   updateBirthday();

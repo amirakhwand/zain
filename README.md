@@ -71,6 +71,13 @@ It's a static site with no build step and no backend.
 npm start         # http://localhost:8080
 ```
 
+### Visitor counts
+
+`src/worker.js` keeps anonymous daily counts in a Durable Object: each browser
+gets a random id in its own storage, and the game pings `/api/event` on visit,
+first move, solve and give-up (daily puzzle only). No names, IPs or cookies.
+Daily totals: `/api/stats` (JSON) or `/api/stats?format=csv`.
+
 ### Hosting
 
 Live at **https://zainle.amirakhwand.workers.dev** on Cloudflare Workers.
