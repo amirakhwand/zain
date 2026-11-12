@@ -71,6 +71,14 @@ It's a static site with no build step and no backend.
 npm start         # http://localhost:8080
 ```
 
+### Merriam-Webster word checks
+
+Words not in the built-in list are checked live against Merriam-Webster's
+Collegiate Dictionary via `/api/word?w=xxxx` (headwords and inflections;
+abbreviations and proper nouns don't count). Answers are cached in the
+Worker. Needs a free key from dictionaryapi.com saved as the Worker secret
+`MW_API_KEY` (Cloudflare → zainle → Settings → Variables and Secrets).
+
 ### Visitor counts
 
 `src/worker.js` keeps anonymous daily counts in a Durable Object: each browser

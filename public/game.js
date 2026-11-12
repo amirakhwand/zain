@@ -169,13 +169,43 @@
     typed = typed.slice(0, -1);
     render();
   }
-  function submit() {
-    if (game.done) return;
+  // Words not in the built-in list are checked against Merriam-Webster
+  // through /api/word (answers are remembered on this device too).
+  const checked = (() => { try { return JSON.parse(localStorage.getItem("zainle-mw") || "{}"); } catch { return {}; } })();
+  async function inMerriamWebster(word) {
+    if (word in checked) return checked[word];
+    try {
+      const ctl = new AbortController();
+      const t = setTimeout(() => ctl.abort(), 5000);
+      const r = await fetch("/api/word?w=" + word, { signal: ctl.signal });
+      clearTimeout(t);
+      const j = await r.json();
+      if (j.source === "merriam-webster") {
+        checked[word] = !!j.ok;
+        try { localStorage.setItem("zainle-mw", JSON.stringify(checked)); } catch {}
+      }
+      return !!j.ok;
+    } catch { return false; }
+  }
+
+  let checking = false;
+  async function submit() {
+    if (game.done || checking) return;
     if (typed.length < 4) { shake(); return toast("Not enough letters"); }
     const word = typed;
     const d = diffCount(word, current());
-    // 1) Is it a real word at all?
-    if (!VALID.has(word)) { shake(); return toast("Not in word list"); }
+    // 1) Is it a real word at all? Built-in list first, then Merriam-Webster.
+    if (!VALID.has(word)) {
+      checking = true;
+      const t = setTimeout(() => toast("Checking dictionary…", 4000), 250);
+      const ok = await inMerriamWebster(word);
+      clearTimeout(t);
+      checking = false;
+      if (typed !== word || game.done) return;
+      if (!ok) { shake(); return toast("Not in word list"); }
+      $("toast").classList.remove("show");
+      VALID.add(word);
+    }
     // 2) It's a real word, but the move breaks the rules.
     if (d === 0) { shake(); return toast(`You're already on ${up(word)}. Change one letter`); }
     if (d > 1) { shake(); return toast(`${up(word)} changes ${d} letters. Only change one`); }
@@ -221,7 +251,7 @@
       s.streak = s.lastSolved === game.n - 1 ? s.streak + 1 : 1;
       s.maxStreak = Math.max(s.maxStreak, s.streak);
       s.lastSolved = game.n;
-      const over = Math.min(steps() - game.par, 5);
+      const over = Math.max(0, Math.min(steps() - game.par, 5));
       s.dist[over] = (s.dist[over] || 0) + 1;
     } else {
       s.streak = 0;
@@ -263,7 +293,7 @@
     const dist = $("dist");
     dist.innerHTML = "";
     const max = Math.max(1, ...Object.values(s.dist));
-    const mine = mode === "daily" && game.done && !game.gaveUp ? Math.min(steps() - game.par, 5) : -1;
+    const mine = mode === "daily" && game.done && !game.gaveUp ? Math.max(0, Math.min(steps() - game.par, 5)) : -1;
     ["Par", "+1", "+2", "+3", "+4", "+5"].forEach((label, i) => {
       const n = s.dist[i] || 0;
       const r = document.createElement("div");
@@ -275,7 +305,7 @@
     $("result").classList.toggle("hidden", !game.done);
     if (game.done) {
       const over = steps() - game.par;
-      $("result-title").textContent = game.gaveUp ? "Here's the way" : over <= 0 ? "Perfect!" : "You reached ZAIN!";
+      $("result-title").textContent = game.gaveUp ? "Here's the way" : over < 0 ? "Beat par!" : over === 0 ? "Perfect!" : "You reached ZAIN!";
       $("result-sub").textContent = game.gaveUp ? "Better luck next time." : `${steps()} steps · par ${game.par}`;
       const best = shortestPath(game.start);
       $("result-path").innerHTML =
