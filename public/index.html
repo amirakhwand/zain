@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Zainle: The Official Zain Safavi Game</title>
-  <meta name="description" content="Daily word and logic puzzles: Zainle, Hunch, Quads, Threads, Comb, Mini and Domino.">
+  <meta name="description" content="Daily word and logic puzzles: Zainle, Quads, Threads, Comb, Mini and Domino.">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Zainle">
   <meta property="og:title" content="Zainle: The Official Zain Safavi Game">
@@ -62,10 +62,6 @@
         <span class="art"><svg viewBox="0 0 60 60" aria-hidden="true"><g font-family="Arial Black,Arial" font-weight="900" font-size="11" text-anchor="middle"><rect x="4" y="4" width="11" height="11" rx="2" fill="#7d7b88"/><rect x="17" y="4" width="11" height="11" rx="2" fill="#3f9f62"/><rect x="30" y="4" width="11" height="11" rx="2" fill="#7d7b88"/><rect x="43" y="4" width="11" height="11" rx="2" fill="#3f9f62"/><rect x="4" y="24" width="11" height="11" rx="2" fill="#7d7b88"/><rect x="17" y="24" width="11" height="11" rx="2" fill="#3f9f62"/><rect x="30" y="24" width="11" height="11" rx="2" fill="#3f9f62"/><rect x="43" y="24" width="11" height="11" rx="2" fill="#3f9f62"/><rect x="4" y="44" width="11" height="11" rx="2" fill="#3f9f62"/><rect x="17" y="44" width="11" height="11" rx="2" fill="#3f9f62"/><rect x="30" y="44" width="11" height="11" rx="2" fill="#3f9f62"/><rect x="43" y="44" width="11" height="11" rx="2" fill="#3f9f62"/><g fill="#fff"><text x="9.5" y="53.5">Z</text><text x="22.5" y="53.5">A</text><text x="35.5" y="53.5">I</text><text x="48.5" y="53.5">N</text></g></g></svg></span>
         <div><h2>Zainle</h2><p>The original. Change one letter at a time until you reach ZAIN.</p><span class="pill" data-status>Play</span></div>
       </a>
-      <a class="card" href="/games/hunch/" data-game="hunch">
-        <span class="art"><svg viewBox="0 0 60 60" aria-hidden="true"><rect x="2" y="22" width="10" height="16" rx="2" fill="#7d7b88"/><rect x="14" y="22" width="10" height="16" rx="2" fill="#d9a520"/><rect x="26" y="22" width="10" height="16" rx="2" fill="#3f9f62"/><rect x="38" y="22" width="10" height="16" rx="2" fill="#7d7b88"/><rect x="50" y="22" width="8" height="16" rx="2" fill="#3f9f62"/></svg></span>
-        <div><h2>Hunch</h2><p>Guess the hidden 5-letter word in six tries.</p><span class="pill" data-status>Play</span></div>
-      </a>
       <a class="card" href="/games/quads/" data-game="quads">
         <span class="art"><svg viewBox="0 0 60 60" aria-hidden="true"><rect x="6" y="6" width="22" height="22" rx="4" fill="#f2c94c"/><rect x="32" y="6" width="22" height="22" rx="4" fill="#6fcf97"/><rect x="6" y="32" width="22" height="22" rx="4" fill="#8ab4f8"/><rect x="32" y="32" width="22" height="22" rx="4" fill="#c39bf0"/></svg></span>
         <div><h2>Quads</h2><p>Sort 16 words into four hidden groups.</p><span class="pill" data-status>Play</span></div>
@@ -99,7 +95,6 @@
       const NEW = "2026-11-21";
       const status = {
         zainle: () => { const s = S.get("zainle-daily", null); if (!s || s.n !== day("2026-11-05")) return ["Play"]; return s.done ? (s.gaveUp ? ["Answer shown", "prog"] : ["Solved ✓", "done"]) : s.ladder && s.ladder.length > 1 ? ["Continue", "prog"] : ["Play"]; },
-        hunch: () => { const s = S.get("zg-hunch", null); if (!s || s.n !== day(NEW)) return ["Play"]; return s.done ? (s.won ? [`Solved in ${s.guesses.length} ✓`, "done"] : ["Better luck tomorrow", "prog"]) : s.guesses.length ? ["Continue", "prog"] : ["Play"]; },
         quads: () => { const s = S.get("zg-quads", null); if (!s || s.n !== day(NEW)) return ["Play"]; return s.done ? (s.won ? ["Solved ✓", "done"] : ["Groups shown", "prog"]) : s.guesses.length ? [`${s.solved.length} of 4 groups`, "prog"] : ["Play"]; },
         threads: () => { const s = S.get("zg-threads", null); if (!s || s.n !== day(NEW)) return ["Play"]; return s.done ? ["Solved ✓", "done"] : s.found.length ? [`${s.found.length} words found`, "prog"] : ["Play"]; },
         comb: () => { const s = S.get("zg-comb", null); if (!s || s.n !== day(NEW) || !s.found.length) return ["Play"]; return s.top ? [`${s.found.length} words ✓`, "done"] : [`${s.found.length} words found`, "prog"]; },

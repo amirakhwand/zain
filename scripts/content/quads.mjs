@@ -29,5 +29,5 @@ export default [
   [["Superpowers", "FLIGHT STRENGTH HEALING TELEPATHY"], ["At the airport", "GATE RUNWAY TERMINAL BAGGAGE"], ["Speed ___", "BUMP DIAL BOAT LIMIT"], ["Coins", "PENNY NICKEL DIME QUARTER"]],
   [["Blue things", "SKY OCEAN SAPPHIRE BLUEBERRY"], ["Gemstones", "RUBY EMERALD DIAMOND TOPAZ"], ["Baseball", "BUNT STRIKE PITCH INNING"], ["Things you can strike", "MATCH POSE DEAL GOLD"]],
   [["Zoo animals", "LION ZEBRA GIRAFFE HIPPO"], ["Striped", "FLAG TIGER BARCODE BEE"], ["Animal groups", "PRIDE SCHOOL FLOCK HERD"], ["Things with trunks", "ELEPHANT CAR TREE SUITCASE"]],
-  [["Zainle games", "HUNCH QUADS THREADS COMB"], ["Birthday party", "CAKE CANDLES BALLOONS PRESENTS"], ["One letter from ZAIN", "MAIN RAIN PAIN GAIN"], ["Ways to say great", "EPIC LEGENDARY STELLAR AWESOME"]],
+  [["Zainle games", "ZAINLE QUADS THREADS COMB"], ["Birthday party", "CAKE CANDLES BALLOONS PRESENTS"], ["One letter from ZAIN", "MAIN RAIN PAIN GAIN"], ["Ways to say great", "EPIC LEGENDARY STELLAR AWESOME"]],
 ];

@@ -8,7 +8,6 @@ light and dark mode, and shares a spoiler-free result.
 | Game | Path | What you do | Puzzles |
 |---|---|---|---|
 | **Zainle** | `/zainle/` | Word ladder: change one letter at a time to reach ZAIN | 1,460 days, generated |
-| **Hunch** | `/games/hunch/` | Guess the 5-letter word in 6 tries | 730 days from 887 everyday words |
 | **Quads** | `/games/quads/` | Sort 16 words into 4 groups | 30 hand-written puzzles, cycling |
 | **Threads** | `/games/threads/` | Find themed words snaking through a 6×8 grid | 40 hand-written themes, 730 generated boards |
 | **Comb** | `/games/comb/` | Make words from 7 letters using the center one | 730 days, generated |
