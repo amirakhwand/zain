@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>Domino · Zainle Games</title>
+  <meta name="description" content="Place every domino so each colored region follows its rule. Easy, medium and hard puzzles daily.">
+  <meta property="og:title" content="Domino · Zainle Games">
+  <meta property="og:description" content="Place every domino so each region follows its rule.">
+  <meta property="og:image" content="https://zainle.amirakhwand.workers.dev/og-image.png">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%233f9f62'/><text x='50' y='72' font-size='64' font-family='Arial Black,Arial' font-weight='900' text-anchor='middle' fill='white'>Z</text></svg>">
+  <link rel="stylesheet" href="/games/common.css?v=1">
+  <style>
+    .d-levels { display: flex; gap: 4px; background: var(--panel); padding: 4px; border-radius: 999px; }
+    .d-levels button { border: 0; background: transparent; padding: 7px 16px; border-radius: 999px; font-weight: 700; font-size: 14px; color: var(--muted); }
+    .d-levels button.on { background: var(--surface); color: var(--ink); box-shadow: 0 1px 0 rgba(0,0,0,.12); }
+    .d-levels button.solved::after { content: " ✓"; color: var(--green); }
+    .d-board { position: relative; touch-action: manipulation; margin: 6px 0; }
+    .d-cell { position: absolute; border-radius: 4px; cursor: pointer; }
+    .d-badge { position: absolute; z-index: 3; min-width: 24px; height: 22px; padding: 0 6px; border-radius: 11px; font-size: 13px; font-weight: 800; display: grid; place-items: center; background: var(--surface); border: 2px solid var(--ink); color: var(--ink); transform: translate(-30%, -30%); pointer-events: none; font-variant-numeric: tabular-nums; }
+    .d-badge.ok { border-color: var(--green); background: var(--green); color: #fff; }
+    .d-badge.bad { border-color: #d64545; background: #d64545; color: #fff; }
+    .d-dom { position: absolute; z-index: 2; display: flex; background: var(--surface); border: 2px solid var(--ink); border-radius: 8px; box-shadow: 0 2px 0 rgba(0,0,0,.15); cursor: pointer; overflow: hidden; }
+    .d-dom.v { flex-direction: column; }
+    .d-dom.active { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent); }
+    .d-half { flex: 1; display: grid; grid-template: repeat(3, 1fr) / repeat(3, 1fr); padding: 14%; }
+    .d-dom:not(.v) .d-half + .d-half { border-left: 1.5px solid var(--line); }
+    .d-dom.v .d-half + .d-half { border-top: 1.5px solid var(--line); }
+    .d-pip { width: 72%; aspect-ratio: 1; border-radius: 50%; background: var(--ink); place-self: center; }
+    .d-tray { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; min-height: 54px; width: 100%; }
+    .d-tray .d-dom { position: relative; width: 84px; height: 42px; }
+    .d-tray .d-dom.sel { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent); transform: translateY(-3px); }
+    .d-tray .d-dom.used { visibility: hidden; }
+    .d-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; justify-content: center; font-size: 13px; color: var(--muted); }
+    .d-legend b { color: var(--ink); }
+  </style>
+</head>
+<body>
+  <main class="zg-main">
+    <div class="zg-wrap">
+      <div class="d-levels" id="levels">
+        <button data-l="easy">Easy</button><button data-l="medium">Medium</button><button data-l="hard">Hard</button>
+      </div>
+      <div class="d-board" id="board"></div>
+      <div class="d-tray" id="tray"></div>
+      <div class="zg-btns">
+        <button class="zg-btn small" id="remove" disabled>Return to tray</button>
+        <button class="zg-btn small" id="clear">Clear board</button>
+      </div>
+      <p class="d-legend"><span><b>12</b> = adds up to 12</span><span><b>&lt;5</b> / <b>&gt;5</b> = less / more than 5</span><span><b>=</b> all the same</span><span><b>≠</b> all different</span></p>
+    </div>
+  </main>
+
+  <dialog id="dlg-help">
+    <h2>How to play Domino</h2>
+    <p>Place every domino on the board so that each colored region follows its rule.</p>
+    <ul>
+      <li>Tap a domino below the board, then tap a square to place it. Tap a placed domino to <b>rotate</b> it.</li>
+      <li>A number means the pips in that region <b>add up</b> to it. <b>&lt;</b> and <b>&gt;</b> mean less or more than it.</li>
+      <li><b>=</b> means every square in the region shows the same number. <b>≠</b> means they're all different.</li>
+      <li>Squares with no badge can hold anything.</li>
+    </ul>
+    <p class="zg-small">Each puzzle has exactly one answer. New easy, medium and hard boards every day.</p>
+  </dialog>
+
+  <dialog id="dlg-stats">
+    <div class="zg-result" id="result"></div>
+    <h3>Statistics</h3>
+    <div id="stats"></div>
+    <div class="zg-btns" style="margin-top:14px"><button class="zg-btn small" id="giveup">Show solution</button></div>
+    <p class="zg-countdown">New boards in <b id="countdown">--:--:--</b></p>
+  </dialog>
+
+  <script src="/games/common.js?v=1"></script>
+  <script src="/games/data/domino.js?v=1"></script>
+  <script src="/games/domino/domino.js?v=1"></script>
+</body>
+</html>

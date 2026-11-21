@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>Mini · Zainle Games</title>
+  <meta name="description" content="A bite-sized 5x5 crossword. A new one every day.">
+  <meta property="og:title" content="Mini · Zainle Games">
+  <meta property="og:description" content="A bite-sized 5x5 crossword.">
+  <meta property="og:image" content="https://zainle.amirakhwand.workers.dev/og-image.png">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%233f9f62'/><text x='50' y='72' font-size='64' font-family='Arial Black,Arial' font-weight='900' text-anchor='middle' fill='white'>Z</text></svg>">
+  <link rel="stylesheet" href="/games/common.css?v=1">
+  <style>
+    .m-top { width: 100%; display: flex; justify-content: space-between; align-items: center; }
+    .m-timer { font-weight: 800; font-variant-numeric: tabular-nums; font-size: 17px; }
+    .m-grid { display: grid; grid-template-columns: repeat(5, 1fr); border: 2px solid var(--ink); width: min(100%, 40svh, 360px); aspect-ratio: 1; flex: none; }
+    .m-cell { position: relative; border: 1px solid var(--tile-filled); display: grid; place-items: center; font-size: clamp(20px, 4.6svh, 32px); font-weight: 700; text-transform: uppercase; background: var(--bg); user-select: none; cursor: pointer; }
+    .m-cell.block { background: var(--ink); cursor: default; }
+    .m-cell.word { background: var(--accent-soft); }
+    .m-cell.cur { background: var(--g1); }
+    .m-cell .num { position: absolute; top: 2px; left: 3px; font-size: 11px; font-weight: 600; color: var(--muted); }
+    .m-cell.wrong { color: #d64545; }
+    .m-cell.wrong::after { content: ""; position: absolute; inset: auto 0 0 auto; width: 0; height: 0; border-left: 12px solid transparent; border-bottom: 12px solid #d64545; }
+    .m-cell.revealed::before { content: ""; position: absolute; top: 0; right: 0; border-left: 10px solid transparent; border-top: 10px solid var(--accent); }
+    .m-cell.done { color: var(--accent); }
+    .m-clue { flex: none; width: 100%; display: flex; align-items: stretch; gap: 6px; background: var(--accent-soft); border-radius: 10px; min-height: 56px; }
+    .m-clue button { border: 0; background: transparent; font-size: 22px; padding: 0 12px; color: var(--muted); }
+    .m-clue p { flex: 1; margin: 0; display: flex; align-items: center; font-weight: 600; font-size: 16px; line-height: 1.3; padding: 8px 0; }
+    .m-clue b { margin-right: 8px; color: var(--accent); white-space: nowrap; }
+    .m-lists { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; font-size: 14px; }
+    .m-lists h3 { margin: 0 0 6px; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+    .m-lists ol { margin: 0; padding: 0; list-style: none; }
+    .m-lists li { padding: 5px 6px; border-radius: 6px; cursor: pointer; line-height: 1.3; }
+    .m-lists li b { margin-right: 6px; }
+    .m-lists li.on { background: var(--accent-soft); }
+    .m-lists li.full { color: var(--muted); }
+    @media (max-height: 760px) { .m-lists { display: none; } }
+  </style>
+</head>
+<body>
+  <main class="zg-main">
+    <div class="zg-wrap">
+      <div class="m-top">
+        <span class="m-timer" id="timer">0:00</span>
+        <div class="zg-btns">
+          <button class="zg-btn small" id="check">Check</button>
+          <button class="zg-btn small" id="reveal">Reveal word</button>
+        </div>
+      </div>
+      <div class="m-grid" id="grid" role="grid" aria-label="Crossword grid"></div>
+      <div class="m-clue"><button id="prev" aria-label="Previous clue">‹</button><p id="clue"></p><button id="next" aria-label="Next clue">›</button></div>
+      <div class="m-lists"><div><h3>Across</h3><ol id="across"></ol></div><div><h3>Down</h3><ol id="down"></ol></div></div>
+    </div>
+  </main>
+  <div id="keyboard"></div>
+
+  <dialog id="dlg-help">
+    <h2>How to play Mini</h2>
+    <p>Fill the grid so every across and down answer matches its clue.</p>
+    <ul>
+      <li>Tap a square to select it. Tap it again to switch between <b>across</b> and <b>down</b>.</li>
+      <li>Type to fill letters. The arrows next to the clue move between clues.</li>
+      <li><b>Check</b> marks wrong letters in red. <b>Reveal word</b> fills in the current answer.</li>
+    </ul>
+    <p class="zg-small">The clock starts when you start. A new Mini comes out every day at midnight.</p>
+  </dialog>
+
+  <dialog id="dlg-stats">
+    <div class="zg-result" id="result"></div>
+    <h3>Statistics</h3>
+    <div id="stats"></div>
+    <p class="zg-countdown">Next Mini in <b id="countdown">--:--:--</b></p>
+  </dialog>
+
+  <script src="/games/common.js?v=1"></script>
+  <script src="/games/data/mini.js?v=1"></script>
+  <script src="/games/mini/mini.js?v=1"></script>
+</body>
+</html>

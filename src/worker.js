@@ -121,7 +121,7 @@ export default {
 
     if (url.pathname === "/api/word" && request.method === "GET") {
       const w = (url.searchParams.get("w") || "").toLowerCase();
-      if (!/^[a-z]{4}$/.test(w)) return json({ word: w, ok: false }, 400);
+      if (!/^[a-z]{3,15}$/.test(w)) return json({ word: w, ok: false }, 400);
       const cached = await stats().cachedWord(w);
       if (cached !== null) return json({ word: w, ok: cached, source: "merriam-webster" });
       const key = mwKey(env);

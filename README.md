@@ -1,4 +1,31 @@
-# Zainle: get to ZAIN
+# Zainle: The Official Zain Safavi Games
+
+The site opens on a landing page (`public/index.html`) listing every game, with
+each player's progress for the day. Every game has a new puzzle at the player's
+local midnight, saves progress in the browser, tracks stats and streaks, has
+light and dark mode, and shares a spoiler-free result.
+
+| Game | Path | What you do | Puzzles |
+|---|---|---|---|
+| **Zainle** | `/zainle/` | Word ladder: change one letter at a time to reach ZAIN | 1,460 days, generated |
+| **Hunch** | `/games/hunch/` | Guess the 5-letter word in 6 tries | 730 days from 887 everyday words |
+| **Quads** | `/games/quads/` | Sort 16 words into 4 groups | 30 hand-written puzzles, cycling |
+| **Threads** | `/games/threads/` | Find themed words snaking through a 6×8 grid | 40 hand-written themes, 730 generated boards |
+| **Comb** | `/games/comb/` | Make words from 7 letters using the center one | 730 days, generated |
+| **Mini** | `/games/mini/` | 5×5 crossword | 30 generated grids with hand-written clues, cycling |
+| **Domino** | `/games/domino/` | Place dominoes so every region's rule holds | 365 days × easy/medium/hard, each proven to have one answer |
+
+All of these are original games with their own names, words, clues and art.
+
+Puzzle data: `npm run build:games` (writes `public/games/data/*.js`; Threads
+takes a few minutes, `SKIP_THREADS=1` skips it). Hand-written content lives in
+`scripts/content/` (Quads puzzles, Threads themes, Mini clues). Mini grids come
+from `node scripts/mini-fill.mjs`. Shared code and styles:
+`public/games/common.js` and `common.css`.
+
+---
+
+## Zainle: get to ZAIN
 
 A daily word ladder game. Everyone gets the same 4-letter start word each day
 and must reach **ZAIN** by changing **one letter at a time**, where every step

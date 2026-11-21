@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>Threads · Zainle Games</title>
+  <meta name="description" content="Find the themed words snaking through the letter grid. Every letter is used.">
+  <meta property="og:title" content="Threads · Zainle Games">
+  <meta property="og:description" content="Find the themed words snaking through the letter grid.">
+  <meta property="og:image" content="https://zainle.amirakhwand.workers.dev/og-image.png">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%233f9f62'/><text x='50' y='72' font-size='64' font-family='Arial Black,Arial' font-weight='900' text-anchor='middle' fill='white'>Z</text></svg>">
+  <link rel="stylesheet" href="/games/common.css?v=1">
+  <style>
+    .t-theme { width: 100%; border-radius: 10px; background: var(--accent-soft); text-align: center; padding: 10px 12px; }
+    .t-theme small { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+    .t-theme b { font-size: 20px; }
+    .t-word { min-height: 34px; font-size: 24px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+    .t-grid { position: relative; touch-action: none; user-select: none; -webkit-user-select: none; }
+    .t-grid svg { position: absolute; inset: 0; pointer-events: none; overflow: visible; }
+    .t-cell { position: absolute; display: grid; place-items: center; border-radius: 50%; font-weight: 800; text-transform: uppercase; color: var(--ink); }
+    .t-cell.sel { background: var(--grey); color: #fff; }
+    .t-cell.found { background: var(--g3); color: #10233f; }
+    .t-cell.hint { box-shadow: inset 0 0 0 2.5px var(--accent); }
+    .t-cell.pop { animation: zg-pop .3s; }
+    .t-bar { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 10px; }
+    .t-count { color: var(--muted); font-size: 15px; }
+    .t-count b { color: var(--ink); }
+    .t-hint { position: relative; overflow: hidden; }
+    .t-hint .meter { position: absolute; left: 0; bottom: 0; height: 3px; background: var(--accent); }
+  </style>
+</head>
+<body>
+  <main class="zg-main">
+    <div class="zg-wrap">
+      <div class="t-theme"><small>Today's theme</small><b id="clue">—</b></div>
+      <div class="t-word" id="word" aria-live="polite"></div>
+      <div class="t-grid" id="grid"><svg id="lines"></svg></div>
+      <div class="t-bar">
+        <span class="t-count"><b id="nfound">0</b> of <b id="ntotal">0</b> theme words found</span>
+        <button class="zg-btn small t-hint" id="hint" disabled>Hint<span class="meter" id="meter"></span></button>
+      </div>
+    </div>
+  </main>
+
+  <dialog id="dlg-help">
+    <h2>How to play Threads</h2>
+    <p>Find the theme words hidden in the grid. Today's theme is shown at the top.</p>
+    <ul>
+      <li>Drag across letters, or tap them one by one, to spell a word. Then tap the last letter again (or lift your finger) to submit.</li>
+      <li>Letters must touch, including diagonally. Words can bend in any direction.</li>
+      <li>Theme words fill the whole board, and no letter is used twice.</li>
+      <li>Find 3 other real words (4+ letters) to earn a <b>hint</b>, which outlines the letters of one theme word.</li>
+    </ul>
+    <p class="zg-small">A new board comes out every day at midnight.</p>
+  </dialog>
+
+  <dialog id="dlg-stats">
+    <div class="zg-result" id="result"></div>
+    <h3>Statistics</h3>
+    <div id="stats"></div>
+    <p class="zg-countdown">Next board in <b id="countdown">--:--:--</b></p>
+  </dialog>
+
+  <script src="/games/common.js?v=1"></script>
+  <script src="/games/data/threads.js?v=1"></script>
+  <script src="/games/threads/threads.js?v=1"></script>
+</body>
+</html>

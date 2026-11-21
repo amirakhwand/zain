@@ -270,7 +270,7 @@
     const score = game.gaveUp ? "X" : `${steps()}/${game.par}`;
     const star = !game.gaveUp && steps() <= game.par ? " ⭐" : "";
     const grid = game.ladder.map((w) => [...w].map((c, i) => (c === TARGET[i] ? "🟩" : "⬛")).join(""));
-    return [`${head} ${score}${star}`, `${up(game.start)} → ZAIN`, "", ...grid, "", location.origin + "/"].join("\n");
+    return [`${head} ${score}${star}`, `${up(game.start)} → ZAIN`, "", ...grid, "", location.origin + "/zainle/"].join("\n");
   }
   // Only a solved puzzle can be shared (not in progress, not after "Show the answer").
   const canShare = () => game.done && !game.gaveUp && current() === TARGET;

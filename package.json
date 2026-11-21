@@ -2,12 +2,13 @@
   "name": "zainle",
   "version": "1.0.0",
   "private": true,
-  "description": "A daily word ladder: change one letter at a time until you reach ZAIN.",
+  "description": "Zainle: daily word and logic games for Zain Safavi.",
   "type": "module",
   "scripts": {
     "generate": "node scripts/generate.mjs",
     "start": "npx --yes serve public -l 8080",
-    "test": "node scripts/verify.mjs"
+    "test": "node scripts/verify.mjs",
+    "build:games": "node scripts/build-games.mjs"
   },
   "devDependencies": {
     "wordlist-english": "1.2.1"

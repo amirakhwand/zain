@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>Quads · Zainle Games</title>
+  <meta name="description" content="Sort 16 words into four hidden groups of four. A new puzzle every day.">
+  <meta property="og:title" content="Quads · Zainle Games">
+  <meta property="og:description" content="Sort 16 words into four hidden groups of four.">
+  <meta property="og:image" content="https://zainle.amirakhwand.workers.dev/og-image.png">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%233f9f62'/><text x='50' y='72' font-size='64' font-family='Arial Black,Arial' font-weight='900' text-anchor='middle' fill='white'>Z</text></svg>">
+  <link rel="stylesheet" href="/games/common.css?v=1">
+  <style>
+    .q-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 100%; }
+    .q-tile { border: 0; border-radius: 8px; background: var(--key); color: var(--key-ink); font-weight: 800; text-transform: uppercase; height: clamp(62px, 11svh, 84px); padding: 4px; font-size: clamp(11px, 3.6vw, 16px); line-height: 1.1; white-space: nowrap; overflow: hidden; user-select: none; transition: transform .1s; }
+    .q-tile.l8 { font-size: clamp(10px, 3vw, 15px); }
+    .q-tile.l10 { font-size: clamp(9px, 2.5vw, 14px); letter-spacing: -.02em; }
+    .q-tile.l12 { font-size: clamp(8px, 2.1vw, 13px); letter-spacing: -.03em; }
+    .q-tile.sel { background: var(--ink); color: var(--bg); }
+    .q-tile:active { transform: scale(.96); }
+    .q-solved { grid-column: 1 / -1; border-radius: 8px; height: clamp(62px, 11svh, 84px); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #1a1a1f; animation: zg-pop .3s; padding: 4px 8px; }
+    .q-solved b { font-size: 15px; text-transform: uppercase; letter-spacing: .02em; }
+    .q-solved span { font-size: 14px; margin-top: 2px; text-transform: uppercase; }
+    .q-solved.c0 { background: var(--g1); } .q-solved.c1 { background: var(--g2); } .q-solved.c2 { background: var(--g3); } .q-solved.c3 { background: var(--g4); }
+    :root[data-theme="dark"] .q-solved { color: #fff; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .q-solved { color: #fff; } }
+    .q-mistakes { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 15px; }
+    .q-dot { width: 13px; height: 13px; border-radius: 50%; background: var(--grey); }
+    .q-dot.used { visibility: hidden; }
+  </style>
+</head>
+<body>
+  <main class="zg-main">
+    <div class="zg-wrap">
+      <p class="zg-sub">Create four groups of four.</p>
+      <div class="q-grid" id="grid" aria-live="polite"></div>
+      <div class="q-mistakes" id="mistakes"></div>
+      <div class="zg-btns" id="controls">
+        <button class="zg-btn" id="shuffle">Shuffle</button>
+        <button class="zg-btn" id="deselect">Deselect all</button>
+        <button class="zg-btn primary" id="submit" disabled>Submit</button>
+      </div>
+      <div class="zg-btns hidden" id="after"><button class="zg-btn primary" id="results">View results</button></div>
+    </div>
+  </main>
+
+  <dialog id="dlg-help">
+    <h2>How to play Quads</h2>
+    <p>Find groups of four words that share something in common.</p>
+    <ul>
+      <li>Tap four words, then <b>Submit</b> to check your guess.</li>
+      <li>Every puzzle has exactly one answer. Watch out for words that seem to fit more than one group!</li>
+      <li>You can make <b>4 mistakes</b> before the game ends.</li>
+    </ul>
+    <p class="zg-small">Groups get trickier from yellow to green to blue to purple. Example: BAT, RACKET, CLUB, PADDLE are things you hit with.</p>
+  </dialog>
+
+  <dialog id="dlg-stats">
+    <div class="zg-result" id="result"></div>
+    <h3>Statistics</h3>
+    <div id="stats"></div>
+    <p class="zg-countdown">Next puzzle in <b id="countdown">--:--:--</b></p>
+  </dialog>
+
+  <script src="/games/common.js?v=1"></script>
+  <script src="/games/data/quads.js?v=1"></script>
+  <script src="/games/quads/quads.js?v=1"></script>
+</body>
+</html>

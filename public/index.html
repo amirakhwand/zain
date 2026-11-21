@@ -2,133 +2,121 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Zainle: The Official Zain Safavi Game</title>
-  <meta name="description" content="Change one letter at a time until you reach ZAIN. A new word every day.">
-  <!-- Link previews (iMessage, WhatsApp, Instagram, Slack, X, etc.) -->
+  <meta name="description" content="Daily word and logic puzzles: Zainle, Hunch, Quads, Threads, Comb, Mini and Domino.">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Zainle">
   <meta property="og:title" content="Zainle: The Official Zain Safavi Game">
-  <meta property="og:description" content="Change one letter at a time until you reach ZAIN. A new word every day.">
+  <meta property="og:description" content="Daily word and logic puzzles. New ones every day.">
   <meta property="og:url" content="https://zainle.amirakhwand.workers.dev/">
   <meta property="og:image" content="https://zainle.amirakhwand.workers.dev/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Zainle: The Official Zain Safavi Game">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Zainle: The Official Zain Safavi Game">
-  <meta name="twitter:description" content="Change one letter at a time until you reach ZAIN. A new word every day.">
   <meta name="twitter:image" content="https://zainle.amirakhwand.workers.dev/og-image.png">
   <meta name="apple-mobile-web-app-title" content="Zainle">
-  <meta name="theme-color" content="#ffffff">
-  <script>
-    // Always live at the site root, whatever link someone opened.
-    if (location.pathname !== "/" && location.protocol !== "file:" && !/^(localhost|127\.)/.test(location.hostname)) location.replace("/" + location.search);
-    // Apply the saved theme before the page paints (no flash).
-    try { const t = localStorage.getItem("zainle-theme"); if (t) document.documentElement.dataset.theme = JSON.parse(t); } catch {}
-  </script>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%233f9f62'/><text x='50' y='72' font-size='64' font-family='Arial Black,Arial' font-weight='900' text-anchor='middle' fill='white'>Z</text></svg>">
-  <link rel="stylesheet" href="/style.css?v=2026.11.12-1">
+  <link rel="stylesheet" href="/games/common.css?v=1">
+  <style>
+    body { overflow: auto; height: auto; min-height: 100dvh; display: block; }
+    .hub { max-width: 980px; margin: 0 auto; padding-block: 28px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+    .hub-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .hub-brand { display: flex; align-items: center; gap: 12px; }
+    .hub-brand .zg-mark { width: 46px; height: 46px; border-radius: 12px; font-size: 28px; }
+    .hub-brand h1 { margin: 0; font-size: clamp(28px, 7vw, 40px); font-weight: 900; letter-spacing: -.01em; line-height: 1; }
+    .hub-brand p { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
+    .hub-date { margin: 26px 0 14px; font-size: 13px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 700; }
+    .hub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 14px; }
+    .card { display: grid; grid-template-columns: 76px 1fr; gap: 14px; align-items: center; text-decoration: none; color: inherit; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px; transition: transform .12s, box-shadow .12s, border-color .12s; min-width: 0; }
+    .card:hover, .card:focus-visible { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0, 0, 0, .08); border-color: var(--tile-filled); outline: none; }
+    .card.feature { grid-column: 1 / -1; grid-template-columns: 96px 1fr; background: var(--accent-soft); border-color: transparent; }
+    .card .art { width: 76px; height: 76px; border-radius: 14px; display: grid; place-items: center; background: var(--panel); }
+    .card.feature .art { width: 96px; height: 96px; background: var(--surface); }
+    .card .art svg { width: 70%; height: 70%; }
+    .card h2 { margin: 0; font-size: 20px; }
+    .card p { margin: 3px 0 8px; color: var(--muted); font-size: 14px; line-height: 1.35; }
+    .pill { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; border-radius: 999px; padding: 5px 12px; background: var(--ink); color: var(--bg); }
+    .pill.prog { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); }
+    .pill.done { background: var(--green); color: #fff; }
+    .hub-foot { margin-top: 30px; color: var(--muted); font-size: 13px; text-align: center; line-height: 1.6; }
+  </style>
 </head>
 <body>
-  <header class="bar">
-    <div class="logo">Zainle <span class="logo-mark">Z</span></div>
-    <div class="title" id="title">#1: ----</div>
-    <nav class="links">
-      <a href="#" id="link-mode">Practice</a>
-      <a href="#" id="link-about">About</a>
-      <button class="theme-btn" id="btn-theme" aria-label="Switch light or dark mode" title="Light / dark mode">
-        <svg class="moon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.39 5.39 0 0 1-4.4 2.26 5.4 5.4 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
-        <svg class="sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zM2 13h2a1 1 0 0 0 0-2H2a1 1 0 0 0 0 2zm18 0h2a1 1 0 0 0 0-2h-2a1 1 0 0 0 0 2zM11 2v2a1 1 0 0 0 2 0V2a1 1 0 0 0-2 0zm0 18v2a1 1 0 0 0 2 0v-2a1 1 0 0 0-2 0zM5.99 4.58a1 1 0 0 0-1.41 1.41l1.06 1.06a1 1 0 0 0 1.41-1.41L5.99 4.58zm12.37 12.37a1 1 0 0 0-1.41 1.41l1.06 1.06a1 1 0 0 0 1.41-1.41l-1.06-1.06zm1.06-10.96a1 1 0 0 0-1.41-1.41l-1.06 1.06a1 1 0 0 0 1.41 1.41l1.06-1.06zM7.05 18.36a1 1 0 0 0-1.41-1.41l-1.06 1.06a1 1 0 0 0 1.41 1.41l1.06-1.06z"/></svg>
+  <main class="hub">
+    <div class="hub-top">
+      <div class="hub-brand">
+        <span class="zg-mark">Z</span>
+        <div><h1>Zainle</h1><p>The Official Zain Safavi Games</p></div>
+      </div>
+      <button class="zg-icon zg-theme" id="theme" aria-label="Switch light or dark mode">
+        <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.39 5.39 0 0 1-4.4 2.26 5.4 5.4 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zM2 13h2a1 1 0 0 0 0-2H2a1 1 0 0 0 0 2zm18 0h2a1 1 0 0 0 0-2h-2a1 1 0 0 0 0 2zM11 2v2a1 1 0 0 0 2 0V2a1 1 0 0 0-2 0zm0 18v2a1 1 0 0 0 2 0v-2a1 1 0 0 0-2 0zM5.99 4.58a1 1 0 0 0-1.41 1.41l1.06 1.06a1 1 0 0 0 1.41-1.41L5.99 4.58zm12.37 12.37a1 1 0 0 0-1.41 1.41l1.06 1.06a1 1 0 0 0 1.41-1.41l-1.06-1.06zm1.06-10.96a1 1 0 0 0-1.41-1.41l-1.06 1.06a1 1 0 0 0 1.41 1.41l1.06-1.06zM7.05 18.36a1 1 0 0 0-1.41-1.41l-1.06 1.06a1 1 0 0 0 1.41 1.41l1.06-1.06z"/></svg>
       </button>
-    </nav>
-  </header>
+    </div>
+    <div class="hub-date" id="date">Today's puzzles</div>
 
-  <button class="bday hidden" id="bday" type="button" aria-label="Happy Birthday Zain! Tap for more confetti">
-    🎉 Happy Birthday Zain! 🎂
-  </button>
-  <canvas class="confetti" id="confetti" aria-hidden="true"></canvas>
+    <div class="hub-grid">
+      <a class="card feature" href="/zainle/" data-game="zainle">
+        <span class="art"><svg viewBox="0 0 60 60" aria-hidden="true"><g font-family="Arial Black,Arial" font-weight="900" font-size="11" text-anchor="middle"><rect x="4" y="4" width="11" height="11" rx="2" fill="#7d7b88"/><rect x="17" y="4" width="11" height="11" rx="2" fill="#3f9f62"/><rect x="30" y="4" width="11" height="11" rx="2" fill="#7d7b88"/><rect x="43" y="4" width="11" height="11" rx="2" fill="#3f9f62"/><rect x="4" y="24" width="11" height="11" rx="2" fill="#7d7b88"/><rect x="17" y="24" width="11" height="11" rx="2" fill="#3f9f62"/><rect x="30" y="24" width="11" height="11" rx="2" fill="#3f9f62"/><rect x="43" y="24" width="11" height="11" rx="2" fill="#3f9f62"/><rect x="4" y="44" width="11" height="11" rx="2" fill="#3f9f62"/><rect x="17" y="44" width="11" height="11" rx="2" fill="#3f9f62"/><rect x="30" y="44" width="11" height="11" rx="2" fill="#3f9f62"/><rect x="43" y="44" width="11" height="11" rx="2" fill="#3f9f62"/><g fill="#fff"><text x="9.5" y="53.5">Z</text><text x="22.5" y="53.5">A</text><text x="35.5" y="53.5">I</text><text x="48.5" y="53.5">N</text></g></g></svg></span>
+        <div><h2>Zainle</h2><p>The original. Change one letter at a time until you reach ZAIN.</p><span class="pill" data-status>Play</span></div>
+      </a>
+      <a class="card" href="/games/hunch/" data-game="hunch">
+        <span class="art"><svg viewBox="0 0 60 60" aria-hidden="true"><rect x="2" y="22" width="10" height="16" rx="2" fill="#7d7b88"/><rect x="14" y="22" width="10" height="16" rx="2" fill="#d9a520"/><rect x="26" y="22" width="10" height="16" rx="2" fill="#3f9f62"/><rect x="38" y="22" width="10" height="16" rx="2" fill="#7d7b88"/><rect x="50" y="22" width="8" height="16" rx="2" fill="#3f9f62"/></svg></span>
+        <div><h2>Hunch</h2><p>Guess the hidden 5-letter word in six tries.</p><span class="pill" data-status>Play</span></div>
+      </a>
+      <a class="card" href="/games/quads/" data-game="quads">
+        <span class="art"><svg viewBox="0 0 60 60" aria-hidden="true"><rect x="6" y="6" width="22" height="22" rx="4" fill="#f2c94c"/><rect x="32" y="6" width="22" height="22" rx="4" fill="#6fcf97"/><rect x="6" y="32" width="22" height="22" rx="4" fill="#8ab4f8"/><rect x="32" y="32" width="22" height="22" rx="4" fill="#c39bf0"/></svg></span>
+        <div><h2>Quads</h2><p>Sort 16 words into four hidden groups.</p><span class="pill" data-status>Play</span></div>
+      </a>
+      <a class="card" href="/games/threads/" data-game="threads">
+        <span class="art"><svg viewBox="0 0 60 60" aria-hidden="true"><polyline points="12,12 30,12 30,30 48,30 48,48" fill="none" stroke="#8ab4f8" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><g fill="#8ab4f8"><circle cx="12" cy="12" r="7"/><circle cx="30" cy="12" r="7"/><circle cx="30" cy="30" r="7"/><circle cx="48" cy="30" r="7"/><circle cx="48" cy="48" r="7"/></g><g fill="#7d7b88"><circle cx="12" cy="30" r="3"/><circle cx="12" cy="48" r="3"/><circle cx="30" cy="48" r="3"/><circle cx="48" cy="12" r="3"/></g></svg></span>
+        <div><h2>Threads</h2><p>Find the themed words snaking through the grid.</p><span class="pill" data-status>Play</span></div>
+      </a>
+      <a class="card" href="/games/comb/" data-game="comb">
+        <span class="art"><svg viewBox="0 0 60 60" aria-hidden="true"><g transform="translate(30 30)"><polygon points="-9,-16 9,-16 18,0 9,16 -9,16 -18,0" fill="#6c4fd1"/><g fill="#d6d5dd"><polygon transform="translate(0 -31) scale(.55)" points="-9,-16 9,-16 18,0 9,16 -9,16 -18,0"/><polygon transform="translate(27 -15.5) scale(.55)" points="-9,-16 9,-16 18,0 9,16 -9,16 -18,0"/><polygon transform="translate(27 15.5) scale(.55)" points="-9,-16 9,-16 18,0 9,16 -9,16 -18,0"/><polygon transform="translate(0 31) scale(.55)" points="-9,-16 9,-16 18,0 9,16 -9,16 -18,0"/><polygon transform="translate(-27 15.5) scale(.55)" points="-9,-16 9,-16 18,0 9,16 -9,16 -18,0"/><polygon transform="translate(-27 -15.5) scale(.55)" points="-9,-16 9,-16 18,0 9,16 -9,16 -18,0"/></g></g></svg></span>
+        <div><h2>Comb</h2><p>How many words can you make from 7 letters?</p><span class="pill" data-status>Play</span></div>
+      </a>
+      <a class="card" href="/games/mini/" data-game="mini">
+        <span class="art"><svg viewBox="0 0 60 60" aria-hidden="true"><rect x="5" y="5" width="50" height="50" fill="none" stroke="#7d7b88" stroke-width="2.5"/><g stroke="#7d7b88" stroke-width="1.5"><line x1="15" y1="5" x2="15" y2="55"/><line x1="25" y1="5" x2="25" y2="55"/><line x1="35" y1="5" x2="35" y2="55"/><line x1="45" y1="5" x2="45" y2="55"/><line x1="5" y1="15" x2="55" y2="15"/><line x1="5" y1="25" x2="55" y2="25"/><line x1="5" y1="35" x2="55" y2="35"/><line x1="5" y1="45" x2="55" y2="45"/></g><rect x="5" y="5" width="10" height="10" fill="#1a1a1f"/><rect x="45" y="45" width="10" height="10" fill="#1a1a1f"/><rect x="15" y="25" width="40" height="10" fill="#f2c94c" opacity=".7"/></svg></span>
+        <div><h2>Mini</h2><p>A bite-sized crossword you can finish over coffee.</p><span class="pill" data-status>Play</span></div>
+      </a>
+      <a class="card" href="/games/domino/" data-game="domino">
+        <span class="art"><svg viewBox="0 0 60 60" aria-hidden="true"><rect x="8" y="17" width="44" height="26" rx="5" fill="#fff" stroke="#1a1a1f" stroke-width="2.5"/><line x1="30" y1="19" x2="30" y2="41" stroke="#bbb" stroke-width="1.5"/><g fill="#1a1a1f"><circle cx="15" cy="23" r="2.6"/><circle cx="19" cy="30" r="2.6"/><circle cx="23" cy="37" r="2.6"/><circle cx="37" cy="23" r="2.6"/><circle cx="45" cy="23" r="2.6"/><circle cx="37" cy="37" r="2.6"/><circle cx="45" cy="37" r="2.6"/></g></svg></span>
+        <div><h2>Domino</h2><p>Place every domino so each region follows its rule.</p><span class="pill" data-status>Play</span></div>
+      </a>
+    </div>
 
-  <main class="board-wrap" id="board-wrap">
-    <div class="board" id="board" aria-live="polite"></div>
+    <p class="hub-foot">New puzzles every day at midnight, your time.<br>Made for Zain Safavi, because all the other games were boring.</p>
   </main>
 
-  <div class="keyboard" id="keyboard" aria-label="Keyboard"></div>
-
-  <footer class="foot">
-    <a href="#" id="link-yesterday">Yesterday's answer</a>
-    <a href="#" id="link-stats">Show stats</a>
-    <a href="#" id="link-help">How to play</a>
-  </footer>
-
-  <div class="toast" id="toast" role="status"></div>
-
-  <!-- How to play -->
-  <dialog class="modal" id="dlg-help">
-    <button class="close" data-close aria-label="Close">×</button>
-    <h2>How to play</h2>
-    <p>Get from today's word to <b class="z">ZAIN</b> in as few steps as you can.</p>
-    <ul>
-      <li>Change <b>one letter</b> at a time.</li>
-      <li>Every step must be a <b>real 4-letter word</b>.</li>
-      <li>Letters already in the right spot for ZAIN turn <b class="z">green</b>.</li>
-      <li><b>Par</b> is the fewest steps possible. Can you match it?</li>
-    </ul>
-    <div class="example">
-      <div class="mini"><span>H</span><span class="g">A</span><span>L</span><span>L</span></div>
-      <div class="mini"><span>H</span><span class="g">A</span><span class="g">I</span><span>L</span></div>
-      <div class="mini"><span>M</span><span class="g">A</span><span class="g">I</span><span>L</span></div>
-      <div class="mini"><span>M</span><span class="g">A</span><span class="g">I</span><span class="g">N</span></div>
-      <div class="mini"><span class="g">Z</span><span class="g">A</span><span class="g">I</span><span class="g">N</span></div>
-    </div>
-    <p class="small">A new word comes out every day at midnight. Can't wait? Try <b>Practice</b> for unlimited puzzles.</p>
-  </dialog>
-
-  <!-- About -->
-  <dialog class="modal" id="dlg-about">
-    <button class="close" data-close aria-label="Close">×</button>
-    <h2>About Zainle</h2>
-    <p>A daily word ladder where every road leads to <b class="z">ZAIN</b>.</p>
-    <p>I made this game for Zain Safavi because all the other games were boring, so enjoy!</p>
-    <p class="small">Everyone gets the same start word each day. Your stats are saved only in this browser.</p>
-    <p class="small">Version 2026.11.12-1</p>
-  </dialog>
-
-  <!-- Yesterday -->
-  <dialog class="modal" id="dlg-yesterday">
-    <button class="close" data-close aria-label="Close">×</button>
-    <h2 id="y-title">Yesterday's answer</h2>
-    <div class="path" id="y-path"></div>
-  </dialog>
-
-  <!-- Stats / result -->
-  <dialog class="modal" id="dlg-stats">
-    <button class="close" data-close aria-label="Close">×</button>
-    <div id="result" class="result hidden">
-      <h2 id="result-title">You reached ZAIN!</h2>
-      <p id="result-sub"></p>
-      <img class="zain-gif hidden" id="zain-gif" src="/zain.gif?v=1" alt="Zain celebrating" width="296" height="640" loading="lazy">
-      <div class="path" id="result-path"></div>
-      <div class="result-btns">
-        <button class="btn primary" id="btn-share">Share</button>
-        <button class="btn hidden" id="btn-new">New puzzle</button>
-      </div>
-    </div>
-    <h2>Statistics</h2>
-    <div class="stats">
-      <div><b id="st-played">0</b><span>Played</span></div>
-      <div><b id="st-par">0</b><span>At par</span></div>
-      <div><b id="st-streak">0</b><span>Streak</span></div>
-      <div><b id="st-max">0</b><span>Max streak</span></div>
-    </div>
-    <h3>Steps over par</h3>
-    <div class="dist" id="dist"></div>
-    <p class="countdown" id="countdown-wrap">Next word in <b id="countdown">--:--:--</b></p>
-    <p class="giveup" id="giveup-wrap"><a href="#" id="link-giveup">Stuck? Show the answer</a></p>
-  </dialog>
-
-  <script src="/words.js?v=2026.11.12-1"></script>
-  <script src="/puzzles.js?v=2026.11.12-1"></script>
-  <script src="/game.js?v=2026.11.12-1"></script>
+  <script src="/games/common.js?v=1"></script>
+  <script>
+    (() => {
+      const S = ZG.store, day = (launch) => ZG.dayIndex(launch) + 1;
+      document.getElementById("date").textContent = new Date().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
+      const NEW = "2026-11-21";
+      const status = {
+        zainle: () => { const s = S.get("zainle-daily", null); if (!s || s.n !== day("2026-11-05")) return ["Play"]; return s.done ? (s.gaveUp ? ["Answer shown", "prog"] : ["Solved ✓", "done"]) : s.ladder && s.ladder.length > 1 ? ["Continue", "prog"] : ["Play"]; },
+        hunch: () => { const s = S.get("zg-hunch", null); if (!s || s.n !== day(NEW)) return ["Play"]; return s.done ? (s.won ? [`Solved in ${s.guesses.length} ✓`, "done"] : ["Better luck tomorrow", "prog"]) : s.guesses.length ? ["Continue", "prog"] : ["Play"]; },
+        quads: () => { const s = S.get("zg-quads", null); if (!s || s.n !== day(NEW)) return ["Play"]; return s.done ? (s.won ? ["Solved ✓", "done"] : ["Groups shown", "prog"]) : s.guesses.length ? [`${s.solved.length} of 4 groups`, "prog"] : ["Play"]; },
+        threads: () => { const s = S.get("zg-threads", null); if (!s || s.n !== day(NEW)) return ["Play"]; return s.done ? ["Solved ✓", "done"] : s.found.length ? [`${s.found.length} words found`, "prog"] : ["Play"]; },
+        comb: () => { const s = S.get("zg-comb", null); if (!s || s.n !== day(NEW) || !s.found.length) return ["Play"]; return s.top ? [`${s.found.length} words ✓`, "done"] : [`${s.found.length} words found`, "prog"]; },
+        mini: () => { const s = S.get("zg-mini", null); if (!s || s.n !== day(NEW)) return ["Play"]; return s.done ? [`Solved in ${Math.floor(s.secs / 60)}:${String(s.secs % 60).padStart(2, "0")} ✓`, "done"] : s.fill.some(Boolean) ? ["Continue", "prog"] : ["Play"]; },
+        domino: () => { const s = S.get("zg-domino", null); if (!s || s.n !== day(NEW)) return ["Play"]; const k = ["easy", "medium", "hard"].filter((l) => s[l] && s[l].done && !s[l].gaveUp).length; return k === 3 ? ["All 3 solved ✓", "done"] : k ? [`${k} of 3 solved`, "prog"] : ["Play"]; },
+      };
+      const paint = () => document.querySelectorAll(".card").forEach((c) => {
+        const [text, cls] = status[c.dataset.game]();
+        const p = c.querySelector("[data-status]"); p.textContent = text; p.className = "pill" + (cls ? " " + cls : "");
+      });
+      paint();
+      window.addEventListener("pageshow", paint);
+      document.addEventListener("visibilitychange", () => { if (!document.hidden) paint(); });
+      const dark = matchMedia("(prefers-color-scheme: dark)");
+      document.getElementById("theme").onclick = () => { const cur = document.documentElement.dataset.theme || (dark.matches ? "dark" : "light"); const n = cur === "dark" ? "light" : "dark"; document.documentElement.dataset.theme = n; S.set("zainle-theme", n); };
+      ZG.track("visit");
+    })();
+  </script>
 </body>
 </html>

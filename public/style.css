@@ -75,7 +75,7 @@ a { color: inherit; }
   padding: 10px 16px;
   border-bottom: 1px solid var(--line);
 }
-.logo { font-weight: 800; font-size: 22px; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.logo { text-decoration: none; color: inherit; font-weight: 800; font-size: 22px; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
 .logo-mark {
   display: inline-grid; place-items: center;
   width: 24px; height: 24px; border-radius: 6px;
@@ -313,6 +313,11 @@ a { color: inherit; }
   .links { gap: 10px; font-size: 13px; }
   .foot { font-size: 14px; }
 }
+@media (max-width: 440px) {
+  .logo-word { display: none; }
+}
 @media (max-width: 360px) {
-  .logo-mark { display: none; }
+  .bar { padding: 10px 8px; gap: 6px; }
+  .links { gap: 7px; font-size: 12px; }
+  .title { font-size: 15px; }
 }

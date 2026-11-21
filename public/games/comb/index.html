@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>Comb · Zainle Games</title>
+  <meta name="description" content="Make as many words as you can from 7 letters. Every word uses the center letter.">
+  <meta property="og:title" content="Comb · Zainle Games">
+  <meta property="og:description" content="Make words from 7 letters. Every word uses the center letter.">
+  <meta property="og:image" content="https://zainle.amirakhwand.workers.dev/og-image.png">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%233f9f62'/><text x='50' y='72' font-size='64' font-family='Arial Black,Arial' font-weight='900' text-anchor='middle' fill='white'>Z</text></svg>">
+  <link rel="stylesheet" href="/games/common.css?v=1">
+  <style>
+    .c-rank { width: 100%; display: flex; align-items: center; gap: 12px; }
+    .c-rank b { min-width: 92px; font-size: 15px; }
+    .c-track { flex: 1; position: relative; height: 4px; background: var(--line); border-radius: 2px; display: flex; justify-content: space-between; align-items: center; }
+    .c-track i { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+    .c-track i.on { background: var(--accent); }
+    .c-track .fill { position: absolute; left: 0; top: 0; height: 4px; background: var(--accent); border-radius: 2px; }
+    .c-score { font-weight: 800; color: var(--accent); min-width: 28px; text-align: right; font-variant-numeric: tabular-nums; }
+    .c-found { width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; }
+    .c-found summary { cursor: pointer; color: var(--muted); font-size: 15px; list-style: none; display: flex; justify-content: space-between; gap: 8px; }
+    .c-found summary::-webkit-details-marker { display: none; }
+    .c-found summary span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .c-found ul { columns: 2; margin: 10px 0 0; padding: 0; list-style: none; font-size: 15px; text-transform: capitalize; }
+    .c-found li { padding: 3px 0; break-inside: avoid; border-bottom: 1px solid var(--line); }
+    .c-found li.pg { font-weight: 800; color: var(--accent); }
+    .c-input { min-height: 44px; font-size: 30px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 1px; }
+    .c-input .center { color: var(--accent); }
+    .c-input .bad { color: var(--line); }
+    .c-input .caret { width: 2px; height: 32px; background: var(--accent); animation: c-blink 1s steps(1) infinite; }
+    @keyframes c-blink { 50% { opacity: 0; } }
+    .c-hive { position: relative; width: 252px; height: 270px; margin: 4px auto; }
+    .c-hex { position: absolute; width: 84px; height: 76px; border: 0; padding: 0; clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); background: var(--key); color: var(--key-ink); font-size: 28px; font-weight: 800; text-transform: uppercase; user-select: none; transition: transform .08s; }
+    .c-hex.center { background: var(--accent); color: #fff; }
+    .c-hex:active { transform: scale(.92); }
+    .c-btns { display: flex; gap: 10px; justify-content: center; }
+    .c-round { border: 1.5px solid var(--line); background: transparent; border-radius: 999px; padding: 12px 20px; font-weight: 700; font-size: 15px; }
+    .c-icon { width: 50px; padding: 0; display: grid; place-items: center; }
+    .c-ranks { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .c-ranks td { padding: 5px 4px; border-bottom: 1px solid var(--line); }
+    .c-ranks td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+    .c-ranks tr.me td { font-weight: 800; color: var(--accent); }
+    .c-yday { columns: 2; padding: 0; list-style: none; font-size: 14px; text-transform: capitalize; }
+  </style>
+</head>
+<body>
+  <main class="zg-main">
+    <div class="zg-wrap">
+      <div class="c-rank"><b id="rank">Starting</b><div class="c-track" id="track"></div><span class="c-score" id="score">0</span></div>
+      <details class="c-found" id="found"><summary><span id="found-sum">You have found 0 words</span><span aria-hidden="true">▾</span></summary><ul id="found-list"></ul></details>
+      <div class="c-input" id="input" aria-live="polite"><span class="caret"></span></div>
+      <div class="c-hive" id="hive"></div>
+      <div class="c-btns">
+        <button class="c-round" id="del">Delete</button>
+        <button class="c-round c-icon" id="shuffle" aria-label="Shuffle letters"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M17 3v2.1A8 8 0 0 0 4.1 10h2.1A6 6 0 0 1 17 7.4V10l4-3.5L17 3zM7 21v-2.1A8 8 0 0 0 19.9 14h-2.1A6 6 0 0 1 7 16.6V14l-4 3.5L7 21z"/></svg></button>
+        <button class="c-round" id="enter">Enter</button>
+      </div>
+    </div>
+  </main>
+
+  <dialog id="dlg-help">
+    <h2>How to play Comb</h2>
+    <p>Make words using the 7 letters in the comb.</p>
+    <ul>
+      <li>Words must be at least <b>4 letters</b> long.</li>
+      <li>Every word must include the <b>center letter</b>.</li>
+      <li>Letters can be used more than once.</li>
+      <li>No proper nouns or hyphenated words.</li>
+    </ul>
+    <h3>Scoring</h3>
+    <ul>
+      <li>4-letter words are worth 1 point.</li>
+      <li>Longer words earn 1 point per letter.</li>
+      <li>Every puzzle has at least one word that uses <b>all 7 letters</b>. It's worth 7 bonus points.</li>
+    </ul>
+    <p class="zg-small">Tap a letter or type on your keyboard. A new comb comes out every day at midnight.</p>
+  </dialog>
+
+  <dialog id="dlg-stats">
+    <h2>Rankings</h2>
+    <p class="zg-small">Ranks are based on a share of today's total possible points.</p>
+    <table class="c-ranks" id="ranks"></table>
+    <div class="zg-btns" style="margin-top:14px"><button class="zg-btn primary small" id="share">Share progress</button></div>
+    <h3>Yesterday's words</h3>
+    <p class="zg-small" id="yday-letters"></p>
+    <ul class="c-yday" id="yday"></ul>
+    <p class="zg-countdown">New comb in <b id="countdown">--:--:--</b></p>
+  </dialog>
+
+  <script src="/games/common.js?v=1"></script>
+  <script src="/games/data/comb.js?v=1"></script>
+  <script src="/games/comb/comb.js?v=1"></script>
+</body>
+</html>
