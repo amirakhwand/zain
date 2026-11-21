@@ -80,6 +80,15 @@ async function inMerriamWebster(word, key) {
   });
 }
 
+// The Merriam-Webster key: MW_API_KEY, or any other secret whose value looks
+// like an MW key (a UUID), in case it was saved under a different name.
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+function mwKey(env) {
+  if (typeof env.MW_API_KEY === "string" && env.MW_API_KEY.trim()) return { name: "MW_API_KEY", value: env.MW_API_KEY.trim() };
+  for (const [name, v] of Object.entries(env)) if (typeof v === "string" && UUID_RE.test(v.trim())) return { name, value: v.trim() };
+  return null;
+}
+
 const json = (body, status = 200) =>
   new Response(JSON.stringify(body), {
     status,
@@ -103,14 +112,22 @@ export default {
       return new Response(null, { status: 204 });
     }
 
+    // Setup check: which text settings the Worker can see (names only, never values).
+    if (url.pathname === "/api/word-status" && request.method === "GET") {
+      const key = mwKey(env);
+      const textSettings = Object.entries(env).filter(([, v]) => typeof v === "string").map(([n]) => n || "(blank name)");
+      return json({ merriamWebster: key ? "on" : "off", keyName: key ? key.name : null, textSettings });
+    }
+
     if (url.pathname === "/api/word" && request.method === "GET") {
       const w = (url.searchParams.get("w") || "").toLowerCase();
       if (!/^[a-z]{4}$/.test(w)) return json({ word: w, ok: false }, 400);
       const cached = await stats().cachedWord(w);
       if (cached !== null) return json({ word: w, ok: cached, source: "merriam-webster" });
-      if (!env.MW_API_KEY) return json({ word: w, ok: false, source: "none" });
+      const key = mwKey(env);
+      if (!key) return json({ word: w, ok: false, source: "none" });
       let ok;
-      try { ok = await inMerriamWebster(w, env.MW_API_KEY); }
+      try { ok = await inMerriamWebster(w, key.value); }
       catch { return json({ word: w, ok: false, source: "error" }, 502); }
       await stats().saveWord(w, ok);
       return json({ word: w, ok, source: "merriam-webster" });
