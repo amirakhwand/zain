@@ -6,7 +6,7 @@ const require = createRequire(import.meta.url);
 const wl = require("wordlist-english");
 const tierOf = new Map();
 for (const t of [10, 20, 35]) for (const r of ["english", "english/american"]) for (const w of wl[`${r}/${t}`]) if (/^[a-z]+$/.test(w) && !tierOf.has(w)) tierOf.set(w, t);
-const bad = new Set("ass bigot naked ken sic devil evil hate pope bible lord anal anus arse butt crap damn dick hell piss shit slut tits turd cock porn rape sexy nude kill dead died gays fags homo".split(" "));
+const bad = new Set("lust moron hated coke gay hes cant ass bigot naked ken sic devil evil hate pope bible lord anal anus arse butt crap damn dick hell piss shit slut tits turd cock porn rape sexy nude kill dead died gays fags homo".split(" "));
 const byLen = {};
 for (const [w, t] of tierOf) {
   if (bad.has(w) || w.length < 3 || w.length > 5) continue;
@@ -57,12 +57,19 @@ function fill(p, r, avoid) {
   }
   return solve() ? { pattern: p, grid: grid.join(""), slots: S.map((s) => ({ dir: s.dir, cells: s.cells, word: s.cells.map((c) => grid[c]).join("") })) } : null;
 }
-const r = rng(31121), out = [], seen = new Set();
-for (let i = 0; out.length < 30 && i < 400; i++) {
+// Keep the grids already in use; add new ones after them (TARGET total).
+import { readFileSync, existsSync } from "node:fs";
+const FILE = new URL("./content/mini-grids.json", import.meta.url);
+const TARGET = Number(process.env.MINI_TARGET || 120);
+const out = existsSync(FILE) ? JSON.parse(readFileSync(FILE, "utf8")) : [];
+const keep = out.length;
+const seen = new Set(out.flatMap((g) => g.slots.map((s) => s.word)));
+const gridsSeen = new Set(out.map((g) => g.grid));
+const r = rng(31121 + keep);
+for (let i = 0; out.length < TARGET && i < 4000; i++) {
   const res = fill(PATTERNS[i % PATTERNS.length], r, seen);
-  if (res) { out.push(res); res.slots.forEach((s) => seen.add(s.word)); }
+  if (res && !gridsSeen.has(res.grid)) { out.push(res); gridsSeen.add(res.grid); res.slots.forEach((s) => seen.add(s.word)); }
 }
-writeFileSync(new URL("./content/mini-grids.json", import.meta.url), JSON.stringify(out, null, 0));
+writeFileSync(FILE, JSON.stringify(out, null, 0));
 const all = [...new Set(out.flatMap((g) => g.slots.map((s) => s.word)))].sort();
-console.log(out.length, "grids,", all.length, "distinct words");
-console.log(all.join(" "));
+console.log(out.length, "grids (" + keep + " kept),", all.length, "distinct words");

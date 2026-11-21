@@ -207,20 +207,24 @@ const write = (name, obj) => writeFileSync(join(OUT, name + ".js"), `// AUTO-GEN
     return { grid: g.grid, entries };
   });
   const r = rng(41121);
-  const order = shuffle(puzzles.map((_, i) => i), r);
+  // Days 1-30 keep their original grids; the newer ones follow.
+  const order = [...shuffle(puzzles.slice(0, 30).map((_, i) => i), r), ...shuffle(puzzles.slice(30).map((_, i) => 30 + i), rng(42121))];
   write("mini", { launch: LAUNCH, puzzles, order });
-  console.log(`Mini: ${puzzles.length} puzzles (cycle repeats every ${puzzles.length} days)`);
+  console.log(`Mini: ${puzzles.length} puzzles (repeats after ${puzzles.length} days)`);
 }
 
 // ============================================================================
 // QUADS: find four groups of four (hand-written puzzles)
 // ============================================================================
 {
-  const puzzles = (await import("./content/quads.mjs")).default.map((p) => p.map(([name, list]) => [name, list.split(" ")]));
+  const first = (await import("./content/quads.mjs")).default, more = (await import("./content/quads-2.mjs")).default;
+  const puzzles = [...first, ...more].map((p) => p.map(([name, list]) => [name, list.split(" ")]));
   for (const p of puzzles) { const all = p.flatMap((g) => g[1]); if (p.length !== 4 || new Set(all).size !== 16 || p.some((g) => g[1].length !== 4)) throw new Error("Quads: bad puzzle " + p[0][0]); }
   const r = rng(61121);
-  write("quads", { launch: LAUNCH, puzzles, order: shuffle(puzzles.map((_, i) => i), r) });
-  console.log(`Quads: ${puzzles.length} puzzles (cycle repeats every ${puzzles.length} days)`);
+  // Days 1-30 keep their original puzzles; the newer ones follow.
+  const order = [...shuffle(first.map((_, i) => i), r), ...shuffle(more.map((_, i) => first.length + i), rng(62121))];
+  write("quads", { launch: LAUNCH, puzzles, order });
+  console.log(`Quads: ${puzzles.length} puzzles (repeats after ${puzzles.length} days)`);
 }
 
 // ============================================================================

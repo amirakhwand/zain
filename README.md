@@ -8,10 +8,10 @@ light and dark mode, and shares a spoiler-free result.
 | Game | Path | What you do | Puzzles |
 |---|---|---|---|
 | **Zainle** | `/zainle/` | Word ladder: change one letter at a time to reach ZAIN | 1,460 days, generated |
-| **Quads** | `/games/quads/` | Sort 16 words into 4 groups | 30 hand-written puzzles, cycling |
+| **Quads** | `/games/quads/` | Sort 16 words into 4 groups | 120 hand-written puzzles |
 | **Threads** | `/games/threads/` | Find themed words snaking through a 6×8 grid | 40 hand-written themes, 730 generated boards |
 | **Comb** | `/games/comb/` | Make words from 7 letters using the center one | 730 days, generated |
-| **Mini** | `/games/mini/` | 5×5 crossword | 30 generated grids with hand-written clues, cycling |
+| **Mini** | `/games/mini/` | 5×5 crossword | 120 generated grids with hand-written clues |
 | **Domino** | `/games/domino/` | Place dominoes so every region's rule holds | 365 days × easy/medium/hard, each proven to have one answer |
 
 All of these are original games with their own names, words, clues and art.
